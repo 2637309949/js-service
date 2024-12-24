@@ -1,0 +1,15 @@
+{
+  "name": "user-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "moleculer": "^0.14.35",
+    "sequelize": "^6.37.5"
+  },
+  "scripts": {
+    "link": "npm link comm",
+    "dev": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

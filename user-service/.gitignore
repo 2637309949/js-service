@@ -1,0 +1,35 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local environment files
+.env
+.env.test
+
+# Build output
+/dist
+/build
+
+# Optional npm cache directory
+.npm/
+
+# IDE or editor directories and files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Build directory for TypeScript users
+lib/
+
+# Logger file dir
+logs/
