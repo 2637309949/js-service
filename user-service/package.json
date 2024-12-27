@@ -9,7 +9,6 @@
   },
   "scripts": {
     "link": "npm link comm",
-    "dev": "node index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node index"
   }
 }
