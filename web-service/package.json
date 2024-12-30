@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
+    "comm": "file:../comm",
     "moleculer-web": "^0.10.7"
   },
+  "_moduleDirectories": [
+    "../"
+  ],
+  "_moduleRequires": [
+    "src"
+  ],
   "scripts": {
-    "dev": "node index",
-    "link": "npm link comm"
+    "link": "npm link comm",
+    "dev": "node index"
   }
 }

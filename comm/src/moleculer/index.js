@@ -107,10 +107,13 @@ rts.createService = function (...opts) {
                     }
                     return new Proxy({}, handler)
                 }
-            }
+            },
+            actions:{}
         }
     }
 
+    opts.push(rts.withActions(actions.getActions()))
+    opts.push(rts.withMethods(methods.getMethods()))
     for (let i = 0; i < opts.length; i++) {
         let opt = opts[i]
         opt(c)
@@ -135,6 +138,24 @@ rts.withBrokerOptions = function (brokerOptions) {
 rts.withSchema = function (schema) {
     return function (s) {
         s.schema = _.merge(s.schema, schema)
+    }
+}
+
+rts.withName = function (name) {
+    return function (s) {
+        s.schema.name = name
+    }
+}
+
+rts.withActions = function (actions) {
+    return function (s) {
+        Object.assign(s.schema.actions, actions)
+    }
+}
+
+rts.withMethods = function (methods) {
+    return function (s) {
+        Object.assign(s.schema.methods, methods)
     }
 }
 

@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
+    "comm": "file:../comm",
     "bcryptjs": "^2.4.3",
-    "moleculer": "^0.14.35",
     "sequelize": "^6.37.5"
   },
+  "_moduleDirectories": [
+    "../"
+  ],
+  "_moduleRequires": [
+    "src"
+  ],
   "scripts": {
     "link": "npm link comm",
     "dev": "node index"

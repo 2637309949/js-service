@@ -17,4 +17,4 @@ const broker = createService(withSchema({
 
 // Start the broker
 broker.start()
-    .catch(err => console.error(`Error occured! ${err.message}`))
+    .catch(err => broker.logger.error(err))

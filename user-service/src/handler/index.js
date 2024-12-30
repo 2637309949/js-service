@@ -6,5 +6,6 @@ const {
 require('./user')
 require('./user.db')
 require('./useraddress')
+require('./useraddress.db')
 
 module.exports = getActions()
