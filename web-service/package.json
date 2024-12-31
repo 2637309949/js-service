@@ -1,19 +1,16 @@
 {
   "name": "web-service",
-  "version": "1.0.0",
-  "main": "index.js",
+  "scripts": {
+    "link": "npm link comm",
+    "dev": "node index"
+  },
   "dependencies": {
-    "comm": "file:../comm",
-    "moleculer-web": "^0.10.7"
+    "comm": "file:../comm"
   },
   "_moduleDirectories": [
     "../"
   ],
   "_moduleRequires": [
-    "src"
-  ],
-  "scripts": {
-    "link": "npm link comm",
-    "dev": "node index"
-  }
+    "src/**/*.js"
+  ]
 }

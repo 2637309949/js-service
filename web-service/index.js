@@ -1,20 +1,16 @@
 const comm = require('comm')
-const ApiService = require("moleculer-web")
 const moleculer = comm.moleculer
 const {
-    createService,
+    createWeb,
     withSchema
 } = moleculer
-const broker = createService(withSchema({
+
+// Start the broker
+createWeb(withSchema({
     name: 'web',
-    mixins: [ApiService],
     settings: {
         routes: [{
             path: "/api"
         }]
     }
 }))
-
-// Start the broker
-broker.start()
-    .catch(err => broker.logger.error(err))

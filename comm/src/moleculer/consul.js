@@ -18,4 +18,22 @@ rts.get = async (key) => {
     }
 }
 
+rts.CommConf = async (k) => {
+    const key = 'micro/config/common'
+    let value = await rts.get(key)
+    if (value) {
+        return k === undefined ? value : value[k]
+    }
+}
+
+rts.Conf = async (name, k) => {
+    const splits = ['micro', 'config', 'service']
+    splits.push(name)
+    const key = splits.join('/')
+    let value = await rts.get(key)
+    if (value) {
+        return k === undefined ? value : value[k]
+    }
+}
+
 module.exports = rts

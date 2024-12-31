@@ -1,5 +1,0 @@
-require('./user')
-require('./role')
-require('./userRole')
-require('./menu')
-require('./roleMenu')

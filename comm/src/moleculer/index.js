@@ -1,21 +1,25 @@
 require('dotenv').config()
+const _ = require("lodash")
 const { ServiceBroker } = require('moleculer')
+const ApiService = require("moleculer-web")
+const consul = require('./consul')
 const mixins = require('./mixins')
 const actions = require('./actions')
 const methods = require('./methods')
 const errors = require('./errors')
 const path = require('path')
 const chalk = require('chalk')
-const _ = require("lodash")
 
 let rts = {
     ...actions,
     ...methods,
     errors
 }
-rts.createService = function (...opts) {
+rts.createService = async function (...opts) {
+    const commConf = await consul.CommConf()
     let c = {
         broker: {
+            namespace: commConf.env,
             logLevel: 'info',
             logger: [
                 {
@@ -87,10 +91,6 @@ rts.createService = function (...opts) {
                 }
             }
         },
-        consul: {
-            port: 8500,
-            host: "172.30.12.14"
-        },
         schema: {
             name: 'N/A',
             mixins: [mixins.consul, mixins.sequelize],
@@ -126,7 +126,13 @@ rts.createService = function (...opts) {
     c.schema.settings.c = c
     const broker = new ServiceBroker(c.broker)
     broker.createService(c.schema)
+    broker.start()
+    .catch(err => broker.logger.error(err))
     return broker
+}
+
+rts.createWeb = function (...opts) {
+    return rts.createService(rts.withMixins(ApiService), ...opts)
 }
 
 rts.withBrokerOptions = function (brokerOptions) {
@@ -156,6 +162,12 @@ rts.withActions = function (actions) {
 rts.withMethods = function (methods) {
     return function (s) {
         Object.assign(s.schema.methods, methods)
+    }
+}
+
+rts.withMixins = function (...mixins) {
+    return function (s) {
+        s.schema.mixins = s.schema.mixins.concat(mixins)
     }
 }
 

@@ -1,2 +1,0 @@
-require('./handler')
-require('./models')

@@ -1,7 +1,9 @@
 {
   "name": "user-service",
-  "version": "1.0.0",
-  "main": "index.js",
+  "scripts": {
+    "link": "npm link comm",
+    "dev": "node index"
+  },
   "dependencies": {
     "comm": "file:../comm",
     "bcryptjs": "^2.4.3",
@@ -11,10 +13,6 @@
     "../"
   ],
   "_moduleRequires": [
-    "src"
-  ],
-  "scripts": {
-    "link": "npm link comm",
-    "dev": "node index"
-  }
+    "src/**/*.js"
+  ]
 }

@@ -1,4 +1,7 @@
 let BuiltinModule = require('module')
+let {
+  globSync
+} = require('glob')
 
 // Guard against poorly mocked module constructors
 let Module = module.constructor.length > 1
@@ -6,6 +9,7 @@ let Module = module.constructor.length > 1
   : BuiltinModule
 
 let nodePath = require('path')
+const { createBrotliCompress } = require('zlib')
 
 let modulePaths = []
 let moduleAliases = {}
@@ -211,10 +215,13 @@ function init (options) {
   // Require custom directories
   //
   if (npmPackage._moduleRequires instanceof Array) {
-    npmPackage._moduleRequires.forEach(function (mr) {
+    npmPackage._moduleRequires.forEach(async (mr) => {
       if (mr === 'node_modules') return
       try {
-        require(nodePath.join(base, mr))
+        const jsfiles = globSync(mr, { ignore: 'node_modules/**' })
+        jsfiles.forEach((mr) => {
+          require(nodePath.join(base, mr))
+        })
       } catch (e) {
         // noop
       }
@@ -227,6 +234,7 @@ function getMainModule () {
 }
 
 module.exports = init
+module.exports.init = init
 module.exports.addPath = addPath
 module.exports.addAlias = addAlias
 module.exports.addAliases = addAliases
