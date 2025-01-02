@@ -1,4 +1,4 @@
-![Moleculer logo](https://raw.githubusercontent.com/2637309949/js-service/logo.png)
+![Moleculer logo](logo.png)
 
 ## Getting Started
 
@@ -8,6 +8,15 @@ $ npm link
 $ npm dev
 ```
 
-## Feature
+## Feature todo
+
+### log traceid
+### rewite hotreload
+
+### sequelize mysql
+
+### consul store
+
+
 
 http://localhost:3000/api/user/queryUser?username=123
