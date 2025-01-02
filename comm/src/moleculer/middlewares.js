@@ -43,7 +43,8 @@ rts.HotReloadMiddleware = function HotReloadMiddleware(broker) {
 
 		// Read the main module
 		// const mainModule = process.mainModule || require.main;
-        const moduleRequires = alias.moduleRequires
+        const moduleRequires = [...alias.moduleRequires]
+		moduleRequires.push(require.main.filename)
 		// Process the whole module tree
 		// processModule(mainModule, null, 0, null);
 		processModuleRequires(moduleRequires);

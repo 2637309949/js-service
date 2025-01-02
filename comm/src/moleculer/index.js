@@ -130,6 +130,8 @@ rts.createService = async function (...opts) {
 
     // rewrite 
     Middlewares.HotReload = middlewares.HotReloadMiddleware
+
+    // starting
     const broker = new ServiceBroker(c.broker)
     broker.createService(c.schema)
     broker.start()
