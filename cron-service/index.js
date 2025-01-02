@@ -1,9 +1,9 @@
 const comm = require('comm')
 const moleculer = comm.moleculer
 const {
-    createService,
+    createCron,
     withName,
 } = moleculer
 
 // Start the broker
-createService(withName('user'))
+createCron(withName('cron'))

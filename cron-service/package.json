@@ -1,0 +1,16 @@
+{
+  "name": "cron-service",
+  "scripts": {
+    "link": "npm link comm",
+    "dev": "node index"
+  },
+  "dependencies": {
+    "comm": "file:../comm"
+  },
+  "_moduleDirectories": [
+    "../"
+  ],
+  "_moduleRequires": [
+    "src/**/*.js"
+  ]
+}
