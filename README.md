@@ -1,4 +1,4 @@
-![Moleculer logo](logo.png)
+![Moleculer logo](web-service/assets/logo.png)
 
 ## Getting Started
 
