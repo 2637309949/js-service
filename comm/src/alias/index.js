@@ -14,6 +14,7 @@ const { createBrotliCompress } = require('zlib')
 let modulePaths = []
 let moduleAliases = {}
 let moduleAliasNames = []
+let moduleRequires = []
 
 let oldNodeModulePaths = Module._nodeModulePaths
 Module._nodeModulePaths = function (from) {
@@ -144,6 +145,7 @@ function reset () {
   modulePaths = []
   moduleAliases = {}
   moduleAliasNames = []
+  moduleRequires = []
 }
 
 /**
@@ -220,6 +222,7 @@ function init (options) {
       try {
         const jsfiles = globSync(mr, { ignore: 'node_modules/**' })
         jsfiles.forEach((mr) => {
+          moduleRequires.push(nodePath.join(base, mr))
           require(nodePath.join(base, mr))
         })
       } catch (e) {
@@ -240,3 +243,4 @@ module.exports.addAlias = addAlias
 module.exports.addAliases = addAliases
 module.exports.isPathMatchesAlias = isPathMatchesAlias
 module.exports.reset = reset
+module.exports.moduleRequires = moduleRequires

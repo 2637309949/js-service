@@ -1,12 +1,13 @@
 require('dotenv').config()
 const _ = require("lodash")
-const { ServiceBroker } = require('moleculer')
+const { ServiceBroker, Middlewares } = require('moleculer')
 const ApiService = require("moleculer-web")
 const consul = require('./consul')
 const mixins = require('./mixins')
 const actions = require('./actions')
 const methods = require('./methods')
 const errors = require('./errors')
+const middlewares = require('./middlewares')
 const path = require('path')
 const chalk = require('chalk')
 
@@ -15,11 +16,13 @@ let rts = {
     ...methods,
     errors
 }
+
 rts.createService = async function (...opts) {
-    const commConf = await consul.CommConf()
+    const ccf = await consul.CommConf()
     let c = {
         broker: {
-            namespace: commConf.env,
+            namespace: ccf.env,
+            hotReload: ccf.env === 'dev' || ccf.env === 'test',
             logLevel: 'info',
             logger: [
                 {
@@ -124,6 +127,9 @@ rts.createService = async function (...opts) {
     file.options.folder = path.join(file.options.folder, c.schema.name)
     // global c
     c.schema.settings.c = c
+
+    // rewrite 
+    Middlewares.HotReload = middlewares.HotReloadMiddleware
     const broker = new ServiceBroker(c.broker)
     broker.createService(c.schema)
     broker.start()
