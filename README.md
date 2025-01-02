@@ -8,15 +8,11 @@ $ npm link
 $ npm dev
 ```
 
-## Feature todo
+## Feature
 
-### log traceid
-### rewite hotreload
-
-### sequelize mysql
-
-### consul store
-
-
-
-http://localhost:3000/api/user/queryUser?username=123
+### Standardized directory structure
+### Using `moduleRequire for` direct loading
+### Log printing of traceid for easier tracking and troubleshooting
+### Rewrite hotreload to support `moduleRequire`
+### Built-in sequelize for direct MySQL queries
+### Consul as a unified configuration management center
