@@ -29,7 +29,18 @@ withAction({
     },
     // File upload from AJAX or cURL
     async stream(ctx) {
-        return
+        const hostName = 'http://localhost:3000'
+        const fileStream = ctx.params
+        const fileId = `${Date.now()}${Math.random().toString(36).slice(2, 9)}`
+        const fileLoc = path.join(process.cwd(), '../web-service/public/files')
+        const filePath = path.join(fileLoc, fileId)
+        const fileUrl = `${hostName}/files/${fileId}`
+        const writeStream = fs.createWriteStream(filePath)
+        fileStream.pipe(writeStream)
+        return {
+            message: "File uploaded successfully",
+            fileUrl
+        }
     },
     // 生成签名url, 签名直传
     async ossSignURL(ctx) {
