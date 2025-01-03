@@ -1,5 +1,6 @@
 const sequelize = require('comm').sequelize
 const DataTypes = sequelize.DataTypes
+
 const {
     define,
     modelName,
@@ -17,35 +18,23 @@ define(
             autoIncrement: true,
             comment: '唯一标识ID',
         },
-        type: {
-            type: DataTypes.TINYINT,
-            defaultValue: 0,
-            allowNull: false,
-            comment: '类型(0：系统角色 1：自定义角色)',
-        },
         name: {
             type: DataTypes.STRING,
             defaultValue: '',
             allowNull: false,
             comment: '名称',
         },
-        code: {
+        env: {
             type: DataTypes.STRING,
             defaultValue: '',
             allowNull: false,
-            comment: '编码',
+            comment: '环境',
         },
-        remark: {
+        cronTime: {
             type: DataTypes.STRING,
             defaultValue: '',
             allowNull: false,
-            comment: '备注',
-        },
-        status: {
-            type: DataTypes.TINYINT,
-            defaultValue: 0,
-            allowNull: false,
-            comment: '状态',
+            comment: '表达式',
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -69,9 +58,9 @@ define(
         }
     }),
     sync(false),
-    modelName('Role'),
+    modelName('Cron'),
     options({
-        tableName: 't_role',
+        tableName: 't_cron',
         timestamps: true
     })
 )

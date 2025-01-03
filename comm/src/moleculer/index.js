@@ -1,4 +1,3 @@
-require('dotenv').config()
 const _ = require("lodash")
 const { ServiceBroker, Middlewares } = require('moleculer')
 const ApiService = require("moleculer-web")
@@ -13,6 +12,42 @@ const middlewares = require('./middlewares')
 const util = require('../util')
 const path = require('path')
 const chalk = require('chalk')
+
+function consoleFormatter(level, args, bindings, { printArgs })  {
+    const date = new Date
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+    const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    const msg = printArgs(args).join(" ")
+    const levelColor = {
+        fatal: chalk.bgRed.white,
+        error: chalk.red,           
+        warn: chalk.yellow,         
+        info: chalk.green,          
+        debug: chalk.blue,          
+        trace: chalk.cyan,    
+    }[level]
+    const coloredLevel = levelColor ? levelColor(level.toUpperCase()) : level.toUpperCase()
+    return [`[${timestamp}]`, coloredLevel, msg]
+}
+
+
+function fileFormatter(level, args, bindings, { printArgs }) {
+    const date = new Date
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+    const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    const msg = printArgs(args).join(" ")
+    return [`[${timestamp}]`, level.toUpperCase(), msg]
+}
 
 let rts = {
     ...actions,
@@ -33,27 +68,7 @@ rts.createService = async function (...opts) {
                     type: "Console",
                     options: {
                         level: "info",
-                        formatter: (level, args, bindings, { printArgs }) => {
-                            const date = new Date
-                            const year = date.getFullYear()
-                            const month = String(date.getMonth() + 1).padStart(2, '0')
-                            const day = String(date.getDate()).padStart(2, '0')
-                            const hours = String(date.getHours()).padStart(2, '0')
-                            const minutes = String(date.getMinutes()).padStart(2, '0')
-                            const seconds = String(date.getSeconds()).padStart(2, '0')
-                            const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-                            const msg = printArgs(args).join(" ")
-                            const levelColor = {
-                                fatal: chalk.bgRed.white,
-                                error: chalk.red,           
-                                warn: chalk.yellow,         
-                                info: chalk.green,          
-                                debug: chalk.blue,          
-                                trace: chalk.cyan,    
-                            }[level]
-                            const coloredLevel = levelColor ? levelColor(level.toUpperCase()) : level.toUpperCase()
-                            return [`[${timestamp}]`, coloredLevel, msg]
-                        }
+                        formatter: consoleFormatter
                     }
                 },
                 {
@@ -62,18 +77,7 @@ rts.createService = async function (...opts) {
                         level: "info",
                         folder: "C:\\Users\/Doubl\/Desktop\/logs",
                         filename: "{date}.log",
-                        formatter: (level, args, bindings, { printArgs }) => {
-                            const date = new Date
-                            const year = date.getFullYear()
-                            const month = String(date.getMonth() + 1).padStart(2, '0')
-                            const day = String(date.getDate()).padStart(2, '0')
-                            const hours = String(date.getHours()).padStart(2, '0')
-                            const minutes = String(date.getMinutes()).padStart(2, '0')
-                            const seconds = String(date.getSeconds()).padStart(2, '0')
-                            const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-                            const msg = printArgs(args).join(" ")
-                            return [`[${timestamp}]`, level.toUpperCase(), msg]
-                        }
+                        formatter: fileFormatter
                     }
                 },
             ],
@@ -100,7 +104,7 @@ rts.createService = async function (...opts) {
         },
         schema: {
             name: 'N/A',
-            mixins: [mixins.consul, mixins.sequelize],
+            mixins: [],
             settings: {
                 cronJobs:[]
             },
@@ -120,13 +124,14 @@ rts.createService = async function (...opts) {
             actions:{}
         }
     }
-
+    opts.push(rts.withMixins(mixins.consul))
+    opts.push(rts.withMixins(mixins.sequelize))
     opts.push(rts.withActions(actions.getActions()))
     opts.push(rts.withMethods(methods.getMethods()))
     opts.push(rts.withCrons(...crons.getCrons()))
     for (let i = 0; i < opts.length; i++) {
         let opt = opts[i]
-        if (util.isPromise) {
+        if (util.isPromise(opt)) {
             await opt(c)
         } else {
             opt(c)

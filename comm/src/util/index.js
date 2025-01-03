@@ -43,9 +43,8 @@ rts.isDate = function isDate(d) {
     return d instanceof Date && !Number.isNaN(d.getTime())
 }
 
-
-rts.isPromise = function (value) {
-    return value && typeof value.then === 'function' && typeof value.catch === 'function'
+rts.isPromise = function (fn) {
+    return (fn && typeof fn.then === 'function' && typeof fn.catch === 'function') || (fn && fn.constructor.name === 'AsyncFunction')
 }
 
 rts.uniq = function uniq(arr) {

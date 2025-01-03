@@ -1,3 +1,4 @@
+require('dotenv').config({ path: ['../.env', '.env'] })
 const alias = require('./alias')
 const moleculer = require('./moleculer')
 const sequelize = require('./sequelize')

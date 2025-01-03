@@ -14,10 +14,17 @@ createWeb(withSchema({
             onBeforeCall(ctx, route, req, res) {
                 ctx.meta.userAgent = req.headers["user-agent"]
             },
+        },
+        {
+            path: "/upload",
+            aliases: {
+                "POST /multipart": "multipart:file.multipart",
+                "POST /stream": "stream:file.stream",
+            }
         }],
         assets: {
-            folder: "./assets",
+            folder: "./public",
             options: { index: ['index.html', 'index.htm'] }
-        }	
+        }
     }
 }))

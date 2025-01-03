@@ -6,4 +6,4 @@ const {
 } = moleculer
 
 // Start the broker
-createService(withName('user'))
+createService(withName('file'))

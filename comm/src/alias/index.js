@@ -175,7 +175,6 @@ function init (options) {
   for (let i in candidatePackagePaths) {
     try {
       base = candidatePackagePaths[i]
-
       npmPackage = require(nodePath.join(base, 'package.json'))
       break
     } catch (e) {
@@ -207,7 +206,6 @@ function init (options) {
   if (npmPackage._moduleDirectories instanceof Array) {
     npmPackage._moduleDirectories.forEach(function (dir) {
       if (dir === 'node_modules') return
-
       let modulePath = nodePath.join(base, dir)
       addPath(modulePath)
     })
@@ -219,15 +217,11 @@ function init (options) {
   if (npmPackage._moduleRequires instanceof Array) {
     npmPackage._moduleRequires.forEach(async (mr) => {
       if (mr === 'node_modules') return
-      try {
-        const jsfiles = globSync(mr, { ignore: 'node_modules/**' })
-        jsfiles.forEach((mr) => {
-          moduleRequires.push(nodePath.join(base, mr))
-          require(nodePath.join(base, mr))
-        })
-      } catch (e) {
-        // noop
-      }
+      const jsfiles = globSync(mr, { ignore: 'node_modules/**' })
+      jsfiles.forEach((mr) => {
+        moduleRequires.push(nodePath.join(base, mr))
+        require(nodePath.join(base, mr))
+      })
     })
   }
 }

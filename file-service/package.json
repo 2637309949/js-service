@@ -1,12 +1,12 @@
 {
-  "name": "user-service",
+  "name": "file-service",
   "scripts": {
     "link": "npm link comm",
     "dev": "node index"
   },
   "dependencies": {
     "comm": "file:../comm",
-    "bcryptjs": "^2.4.3"
+    "fs-extra": "^11.2.0"
   },
   "_moduleDirectories": [
     "../"

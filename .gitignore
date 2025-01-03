@@ -33,3 +33,7 @@ lib/
 
 # Logger file dir
 logs/
+
+# assets file dir
+assets/
+public/
