@@ -3,41 +3,39 @@ const moleculer = comm.moleculer
 const {
     withAction,
     errors: {
-        MoleculerError
+        MoleculerError 
     }
 } = moleculer
 
 // http://localhost:3000/api/user/queryUser?username=123
 withAction({
     async queryUserDetail(ctx) {
-        const logger = this.withLogger(ctx)
-        const { id } = ctx.params
-        if (id === undefined) {
-            logger.warn('id未设置')
-            throw new MoleculerError('id未设置', 400, 'BAD_PARAMS')
+        this.info(ctx, 'queryUserDetail invoked')
+        const err = this.check(ctx, 'id')
+        if (err) {
+            throw err
         }
-    
+        const { id } = ctx.params
         const rsp = {}
         const where = { id }
         const user = await this.queryUserDetailDB(ctx, where)
         if (!user) {
-            logger.warn(`用户ID ${id} 不存在`)
-            throw new MoleculerError(`用户ID ${id} 不存在`, 400, 'BAD_PARAMS')
+            this.warn(ctx, `用户[${id}]不存在`)
+            throw new MoleculerError(`用户[${id}]不存在`, 400, 'BAD_PARAMS')
         }
-    
         rsp.data = user
         return rsp
     },
     async queryUser(ctx) {
-        const logger = this.withLogger(ctx)
+        this.info(ctx, 'queryUser invoked')
+        const err = this.check(ctx, 'username')
+        if (err) {
+            throw err
+        }
         const {
             username,
             pageNo = 1,
             pageSize = 10 } = ctx.params
-        if (username === undefined) {
-            logger.warn('username未设置')
-            throw new MoleculerError('username未设置', 400, 'BAD_PARAMS')
-        }
         const rsp = {}
         const where = { username }
         const [users, total] = await this.queryUserDB(ctx, where, null)
@@ -49,20 +47,15 @@ withAction({
         return rsp
     },
     async updateUser(ctx) {
-        const logger = this.withLogger(ctx)
+        this.info(ctx, 'queryUser invoked')
+        const err = this.check(ctx, 'id', 'username', 'email')
+        if (err) {
+            throw err
+        }
         const {
             id,
             username,
             email } = ctx.params
-        if (id === undefined ) {
-            logger.warn('id未设置')
-            throw new MoleculerError('id未设置', 400, 'BAD_PARAMS')
-        }
-        if (username === undefined && email === undefined) {
-            logger.warn('至少提供一个更新字段，如name或email')
-            throw new MoleculerError('至少提供一个更新字段，如name或email', 400, 'BAD_PARAMS')
-        }
-    
         const rsp = {}
         const where = { id }
         const updateFields = { id }
@@ -82,10 +75,15 @@ withAction({
         return rsp
     },
     async deleteUser(ctx) {
+        this.info(ctx, 'deleteUser invoked')
+        const err = this.check(ctx, 'id', 'username', 'email')
+        if (err) {
+            throw err
+        }
         const { id } = ctx.params
         if (id == undefined) {
-            logger.warn('id未设置')
-            throw new MoleculerError('id未设置', 400, 'BAD_PARAMS')
+            this.warn(ctx, '[id]不能为空')
+            throw new MoleculerError('[id]不能为空', 400, 'BAD_PARAMS')
         }
         const rsp = {}
         const where = { id }
@@ -94,18 +92,14 @@ withAction({
         return rsp
     },
     async insertUser(ctx) {
+        this.info(ctx, 'insertUser invoked')
+        const err = this.check(ctx, 'username', 'email')
+        if (err) {
+            throw err
+        }
         const { 
             username, 
             email } = ctx.params
-        if (username == undefined) {
-            logger.warn('username未设置')
-            throw new MoleculerError('username未设置', 400, 'BAD_PARAMS')
-        }
-        if (email == undefined) {
-            logger.warn('email未设置')
-            throw new MoleculerError('email未设置', 400, 'BAD_PARAMS')
-        }
-    
         const insertFields = {}
         if (username) insertFields.username = username
         if (email) insertFields.email = email
@@ -114,12 +108,12 @@ withAction({
         const where = { email }
         const user = await this.queryUserDetailDB(ctx, where)
         if (user) {
-            logger.warn(`用户Email ${email} 已存在`)
-            throw new MoleculerError(`用户Email ${email} 已存在`, 500)
+            this.warn(ctx, `用户Email[${email}]已存在`)
+            throw new MoleculerError(`用户Email[${email}]已存在`, 500)
         }
         const insertedUser = await this.insertUserDB(ctx, insertFields)
         if (!insertedUser) {
-            logger.warn('新增用户失败')
+            this.warn(ctx, '新增用户失败')
             throw new MoleculerError('新增用户失败', 500)
         }
     
@@ -127,19 +121,15 @@ withAction({
         return rsp
     },
     async saveUser(ctx) {
+        this.info(ctx, 'saveUser invoked')
+        const err = this.check(ctx, 'id')
+        if (err) {
+            throw err
+        }
         const { 
             id, 
             name, 
             email } = ctx.params
-        if (username == undefined) {
-            logger.warn('username未设置')
-            throw new MoleculerError('username未设置', 400, 'BAD_PARAMS')
-        }
-        if (email == undefined) {
-            logger.warn('email未设置')
-            throw new MoleculerError('email未设置', 400, 'BAD_PARAMS')
-        }
-    
         const updateFields = {}
         if (name) updateFields.name = name
         if (email) updateFields.email = email
@@ -156,7 +146,7 @@ withAction({
         if (!user) {
             const insertedUser = await this.insertUserDB(ctx, updateFields)
             if (!insertedUser) {
-                logger.warn('新增用户失败')
+                this.warn(ctx, '新增用户失败')
                 throw new MoleculerError('新增用户失败', 500)
             }
             rsp.data = insertedUser
@@ -164,7 +154,7 @@ withAction({
             updateFields.id = user.id
             const updatedUser = await this.updateUserDB(ctx, updateFields)
             if (!updatedUser) {
-                logger.warn('更新用户信息失败')
+                this.warn(ctx, '更新用户信息失败')
                 throw new MoleculerError('更新用户信息失败', 500)
             }
             rsp.data = updateFields

@@ -1,5 +1,7 @@
 const _ = require("lodash")
-const { ServiceBroker, Middlewares } = require('moleculer')
+const { ServiceBroker, Middlewares, Errors: {
+    ValidationError
+} } = require('moleculer')
 const ApiService = require("moleculer-web")
 const CronMixin = require("moleculer-cron")
 const consul = require('./consul')
@@ -119,6 +121,42 @@ rts.createService = async function (...opts) {
                         }
                     }
                     return new Proxy({}, handler)
+                },
+                fatal(ctx, ...args) {
+                    const logger = this.withLogger(ctx)
+                    logger.fatal(...args)
+                },
+                error(ctx, ...args) {
+                    const logger = this.withLogger(ctx)
+                    logger.error(...args)
+                },
+                warn(ctx, ...args) {
+                    const logger = this.withLogger(ctx)
+                    logger.warn(...args)
+                },
+                info(ctx, ...args) {
+                    const logger = this.withLogger(ctx)
+                    logger.info(...args)
+                },
+                debug(ctx, ...args) {
+                    const logger = this.withLogger(ctx)
+                    logger.debug(...args)
+                },
+                trace(ctx, ...args) {
+                    const logger = this.withLogger(ctx)
+                    logger.trace(...args)
+                },
+                check(ctx, ...props) {
+                    const rsp = []
+                    const obj = ctx.params
+                    props.forEach(prop => {
+                        if (!obj[prop]) {
+                            rsp.push(prop)
+                        }
+                    })
+                    if (rsp.length) {
+                        return new ValidationError(`参数[${rsp.join(',')}]不能为空!`)
+                    }
                 }
             },
             actions:{}

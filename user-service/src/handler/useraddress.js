@@ -6,15 +6,15 @@ const {
 
 withAction({
     async queryUserAddress(ctx) {
-        const logger = this.withLogger(ctx)
+        this.info(ctx, 'queryUserDetail invoked')
+        const err = this.check(ctx, 'userId')
+        if (err) {
+            throw err
+        }
         const {
             userId,
             pageNo = 1,
             pageSize = 10 } = ctx.params
-        if (userId === undefined) {
-            logger.warn('userId未设置')
-            throw new MoleculerError('userId未设置', 400, 'BAD_PARAMS')
-        }
         const rsp = {}
         const where = { userId }
         const [users, total] = await this.queryUserAddressDB(ctx, where, null)

@@ -7,12 +7,11 @@ const {
 withMethod({
     async queryUserAddressDB(ctx, where, ...count) {
         const sequelize = this.sequelize
-        const logger = this.withLogger(ctx)
         const options = { where, attributes: { exclude: ['deletedAt', 'password'] } }
         options.logging = msg => {
             const sqlMatch = msg.match(/^Executing \(default\): (.*?);?$/)
             msg = sqlMatch ? sqlMatch[1] : msg
-            logger.info(msg)
+            this.info(ctx, msg)
         }
         const UserAddress = sequelize.models.UserAddress
         let total = 0
