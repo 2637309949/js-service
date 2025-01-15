@@ -10,7 +10,6 @@ const {
 // http://localhost:3000/api/user/queryUser?username=123
 withAction({
     async queryUserDetail(ctx) {
-        this.info(ctx, 'queryUserDetail invoked')
         const err = this.check(ctx, 'id')
         if (err) {
             throw err
@@ -27,7 +26,6 @@ withAction({
         return rsp
     },
     async queryUser(ctx) {
-        this.info(ctx, 'queryUser invoked')
         const err = this.check(ctx, 'username')
         if (err) {
             throw err
@@ -47,7 +45,6 @@ withAction({
         return rsp
     },
     async updateUser(ctx) {
-        this.info(ctx, 'queryUser invoked')
         const err = this.check(ctx, 'id', 'username', 'email')
         if (err) {
             throw err
@@ -75,7 +72,6 @@ withAction({
         return rsp
     },
     async deleteUser(ctx) {
-        this.info(ctx, 'deleteUser invoked')
         const err = this.check(ctx, 'id', 'username', 'email')
         if (err) {
             throw err
@@ -92,7 +88,6 @@ withAction({
         return rsp
     },
     async insertUser(ctx) {
-        this.info(ctx, 'insertUser invoked')
         const err = this.check(ctx, 'username', 'email')
         if (err) {
             throw err
@@ -121,7 +116,6 @@ withAction({
         return rsp
     },
     async saveUser(ctx) {
-        this.info(ctx, 'saveUser invoked')
         const err = this.check(ctx, 'id')
         if (err) {
             throw err

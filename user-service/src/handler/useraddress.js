@@ -6,7 +6,6 @@ const {
 
 withAction({
     async queryUserAddress(ctx) {
-        this.info(ctx, 'queryUserDetail invoked')
         const err = this.check(ctx, 'userId')
         if (err) {
             throw err

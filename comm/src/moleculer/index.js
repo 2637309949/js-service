@@ -15,6 +15,44 @@ const util = require('../util')
 const path = require('path')
 const chalk = require('chalk')
 
+let lut = []
+let broker = null
+
+for (let i = 0; i < 256; i++) {
+	lut[i] = (i < 16 ? "0" : "") + i.toString(16)
+}
+
+function uidGenerator() {
+    const d0 = (Math.random() * 0xffffffff) | 0;
+    const d1 = (Math.random() * 0xffffffff) | 0;
+    const d2 = (Math.random() * 0xffffffff) | 0;
+    const d3 = (Math.random() * 0xffffffff) | 0;
+    let uid = (
+        lut[d0 & 0xff] +
+        lut[(d0 >> 8) & 0xff] +
+        lut[(d0 >> 16) & 0xff] +
+        lut[(d0 >> 24) & 0xff] +
+        "-" +
+        lut[d1 & 0xff] +
+        lut[(d1 >> 8) & 0xff] +
+        "-" +
+        lut[((d1 >> 16) & 0x0f) | 0x40] +
+        lut[(d1 >> 24) & 0xff] +
+        "-" +
+        lut[(d2 & 0x3f) | 0x80] +
+        lut[(d2 >> 8) & 0xff] +
+        "-" +
+        lut[(d2 >> 16) & 0xff] +
+        lut[(d2 >> 24) & 0xff] +
+        lut[d3 & 0xff] +
+        lut[(d3 >> 8) & 0xff] +
+        lut[(d3 >> 16) & 0xff] +
+        lut[(d3 >> 24) & 0xff]
+    )
+    uid = uid.replace(/-/g, "").substring(0, 16)
+    return uid
+}
+
 function consoleFormatter(level, args, bindings, { printArgs })  {
     const date = new Date
     const year = date.getFullYear()
@@ -24,6 +62,14 @@ function consoleFormatter(level, args, bindings, { printArgs })  {
     const minutes = String(date.getMinutes()).padStart(2, '0')
     const seconds = String(date.getSeconds()).padStart(2, '0')
     const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+
+    // gray traceId
+    const lastArg = args[args.length - 1]
+    if (typeof lastArg === 'string' && lastArg.length === 16) {
+        args[args.length - 1] = chalk.gray(lastArg)
+    }
+
+    // chalk join
     const msg = printArgs(args).join(" ")
     const levelColor = {
         fatal: chalk.bgRed.white,
@@ -36,7 +82,6 @@ function consoleFormatter(level, args, bindings, { printArgs })  {
     const coloredLevel = levelColor ? levelColor(level.toUpperCase()) : level.toUpperCase()
     return [`[${timestamp}]`, coloredLevel, msg]
 }
-
 
 function fileFormatter(level, args, bindings, { printArgs }) {
     const date = new Date
@@ -102,7 +147,22 @@ rts.createService = async function (...opts) {
                         }
                     }
                 }
-            }
+            },
+            uidGenerator,
+            middlewares:[{
+                localAction(next, action) {
+                    return function(ctx) {
+                        broker.logger.info(`========== ${action.name} invoked ==========`, ctx.requestID)
+                        return next(ctx)
+                            .then(res => {
+                                return res
+                            })
+                            .catch(err => {
+                                throw err
+                            })
+                    }
+                }
+            }]
         },
         schema: {
             name: 'N/A',
@@ -186,7 +246,7 @@ rts.createService = async function (...opts) {
     Middlewares.HotReload = middlewares.HotReloadMiddleware
 
     // starting
-    const broker = new ServiceBroker(c.broker)
+    broker = new ServiceBroker(c.broker)
     broker.createService(c.schema)
     broker.start()
     .catch(err => broker.logger.error(err))
