@@ -3,33 +3,26 @@ const moleculer = comm.moleculer
 const {
     withAction,
     errors: {
-        MoleculerError 
+        BusinessServerError
     }
 } = moleculer
 
 // http://localhost:3000/api/user/queryUser?username=123
 withAction({
     async queryUserDetail(ctx) {
-        const err = this.check(ctx, 'id')
-        if (err) {
-            throw err
-        }
+        this.check(ctx, 'id')
         const { id } = ctx.params
         const rsp = {}
         const where = { id }
         const user = await this.queryUserDetailDB(ctx, where)
         if (!user) {
-            this.warn(ctx, `用户[${id}]不存在`)
-            throw new MoleculerError(`用户[${id}]不存在`, 400, 'BAD_PARAMS')
+            throw new BusinessServerError(`用户[${id}]不存在`)
         }
         rsp.data = user
         return rsp
     },
     async queryUser(ctx) {
-        const err = this.check(ctx, 'username')
-        if (err) {
-            throw err
-        }
+        this.check(ctx, 'username')
         const {
             username,
             pageNo = 1,
@@ -45,14 +38,8 @@ withAction({
         return rsp
     },
     async updateUser(ctx) {
-        const err = this.check(ctx, 'id', 'username', 'email')
-        if (err) {
-            throw err
-        }
-        const {
-            id,
-            username,
-            email } = ctx.params
+        this.check(ctx, 'id', 'username', 'email')
+        const { id, username, email } = ctx.params
         const rsp = {}
         const where = { id }
         const updateFields = { id }
@@ -60,27 +47,20 @@ withAction({
         if (email) updateFields.email = email
         const user = await this.queryUserDetailDB(ctx, where)
         if (!user) {
-            throw new MoleculerError(`用户ID ${id} 不存在`, 500)
+            throw new BusinessServerError(`用户ID ${id} 不存在`)
         }
     
         const updatedUser = await this.updateUserDB(ctx, updateFields)
         if (!updatedUser) {
-            throw new MoleculerError('更新用户信息失败', 500)
+            throw new BusinessServerError('更新用户信息失败')
         }
     
         rsp.data = updateFields
         return rsp
     },
     async deleteUser(ctx) {
-        const err = this.check(ctx, 'id', 'username', 'email')
-        if (err) {
-            throw err
-        }
-        const { id } = ctx.params
-        if (id == undefined) {
-            this.warn(ctx, '[id]不能为空')
-            throw new MoleculerError('[id]不能为空', 400, 'BAD_PARAMS')
-        }
+        this.check(ctx, 'id')
+        const id = ctx.params.id
         const rsp = {}
         const where = { id }
         await this.deleteUserDB(ctx, where)
@@ -88,10 +68,7 @@ withAction({
         return rsp
     },
     async insertUser(ctx) {
-        const err = this.check(ctx, 'username', 'email')
-        if (err) {
-            throw err
-        }
+        this.check(ctx, 'username', 'email')
         const { 
             username, 
             email } = ctx.params
@@ -103,33 +80,26 @@ withAction({
         const where = { email }
         const user = await this.queryUserDetailDB(ctx, where)
         if (user) {
-            this.warn(ctx, `用户Email[${email}]已存在`)
-            throw new MoleculerError(`用户Email[${email}]已存在`, 500)
+            throw new BusinessServerError(`用户Email[${email}]已存在`)
         }
         const insertedUser = await this.insertUserDB(ctx, insertFields)
         if (!insertedUser) {
-            this.warn(ctx, '新增用户失败')
-            throw new MoleculerError('新增用户失败', 500)
+            throw new BusinessServerError('新增用户失败')
         }
     
         rsp.data = insertedUser
         return rsp
     },
     async saveUser(ctx) {
-        const err = this.check(ctx, 'id')
-        if (err) {
-            throw err
-        }
-        const { 
-            id, 
-            name, 
-            email } = ctx.params
+        this.check(ctx, 'id')
+        const { id, name, email } = ctx.params
         const updateFields = {}
         if (name) updateFields.name = name
         if (email) updateFields.email = email
     
         const rsp = {}
         const where = {}
+        
         if (id) {
             where.id = id
         } else {
@@ -140,16 +110,14 @@ withAction({
         if (!user) {
             const insertedUser = await this.insertUserDB(ctx, updateFields)
             if (!insertedUser) {
-                this.warn(ctx, '新增用户失败')
-                throw new MoleculerError('新增用户失败', 500)
+                throw new BusinessServerError('新增用户失败')
             }
             rsp.data = insertedUser
         } else {
             updateFields.id = user.id
             const updatedUser = await this.updateUserDB(ctx, updateFields)
             if (!updatedUser) {
-                this.warn(ctx, '更新用户信息失败')
-                throw new MoleculerError('更新用户信息失败', 500)
+                throw new BusinessServerError('更新用户信息失败')
             }
             rsp.data = updateFields
         }

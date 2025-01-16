@@ -6,10 +6,7 @@ const {
 
 withAction({
     async queryUserAddress(ctx) {
-        const err = this.check(ctx, 'userId')
-        if (err) {
-            throw err
-        }
+        this.check(ctx, 'userId')
         const {
             userId,
             pageNo = 1,
