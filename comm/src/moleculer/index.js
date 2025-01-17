@@ -325,4 +325,10 @@ rts.withMixins = function (...mixins) {
     }
 }
 
+rts.withSettings = function (setting) {
+    return function (s) {
+        Object.assign(s.schema.settings, setting)
+    }
+}
+
 module.exports = rts
