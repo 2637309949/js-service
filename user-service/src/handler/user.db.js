@@ -11,7 +11,7 @@ withMethod({
     async queryUserDetailDB (ctx, where) {
         try {
             const sequelize = this.sequelize
-            const options = { where, attributes: { exclude: ['deletedAt', 'password'] } }
+            const options = { where }
             options.logging = msg => {
                 const sqlMatch = msg.match(/^Executing \(default\): (.*?);?$/)
                 msg = sqlMatch ? sqlMatch[1] : msg
@@ -47,7 +47,7 @@ withMethod({
     async updateUserDB(ctx, user) {
         try {
             const sequelize = this.sequelize
-            const options = { where, attributes: { exclude: ['deletedAt', 'password'] } }
+            const options = { where }
             options.logging = msg => {
                 const sqlMatch = msg.match(/^Executing \(default\): (.*?);?$/)
                 msg = sqlMatch ? sqlMatch[1] : msg

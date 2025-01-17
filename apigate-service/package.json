@@ -1,12 +1,11 @@
 {
-  "name": "file-service",
+  "name": "apigate-service",
   "scripts": {
     "link": "npm link comm",
     "start": "node index"
   },
   "dependencies": {
-    "comm": "file:../comm",
-    "fs-extra": "^11.2.0"
+    "comm": "file:../comm"
   },
   "_moduleDirectories": [
     "../"

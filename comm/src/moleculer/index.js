@@ -117,6 +117,7 @@ rts.createService = async function (...opts) {
         namespace,
         hotReload,
         logLevel,
+        cacher: 'Memory',
         logger: [
             {
                 type: "Console",
@@ -180,7 +181,7 @@ rts.createService = async function (...opts) {
         name: 'N/A',
         mixins: [],
         settings: {
-            cronJobs: []
+            cronJobs: [],
         },
         methods: {
             withLogger(ctx = {}) {
@@ -236,6 +237,7 @@ rts.createService = async function (...opts) {
 
     opts.push(rts.withMixins(mixins.consul))
     opts.push(rts.withMixins(mixins.sequelize))
+    opts.push(rts.withMixins(...mixins.getMixins()))
     opts.push(rts.withActions(actions.getActions()))
     opts.push(rts.withMethods(methods.getMethods()))
     opts.push(rts.withCrons(...crons.getCrons()))
@@ -316,6 +318,7 @@ rts.withCrons = function (...crons) {
     }
 }
 
+rts.withMixin = mixins.withMixin
 rts.withMixins = function (...mixins) {
     return function (s) {
         s.schema.mixins = s.schema.mixins.concat(mixins)

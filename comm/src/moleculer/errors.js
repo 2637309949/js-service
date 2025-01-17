@@ -1,4 +1,6 @@
 const { Errors } = require('moleculer')
+const ApiGateway = require("moleculer-web")
+const { UnAuthorizedError } = ApiGateway.Errors
 
 // 应用错误
 class ApplicationServerError extends Errors.MoleculerServerError {
@@ -71,6 +73,7 @@ class ArithmeticServerError extends ApplicationServerError {
 
 module.exports = {
     ...Errors,
+	UnAuthorizedError,
     DatabaseServerError,
     BusinessServerError,
     ArithmeticServerError

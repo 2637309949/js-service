@@ -2,7 +2,7 @@
   "name": "cron-service",
   "scripts": {
     "link": "npm link comm",
-    "dev": "node index"
+    "start": "node index"
   },
   "dependencies": {
     "comm": "file:../comm"

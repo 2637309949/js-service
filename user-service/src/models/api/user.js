@@ -6,11 +6,11 @@ const {
 } = moleculer
 
 withMethod({
-    checkPasswordCriteria(password) {
-        const passwordCriteria = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&^*])(?=.{8,})/
-        // Test criteria
-        let isValid = passwordCriteria.test(password)
-        return isValid ? true : false
+    getLoginVerificationCode(id) {
+        return `code:login:${id}`
+    },
+    getRegistedVerificationCode(id) {
+        return `code:registed:${id}`
     },
     checkPasswordCriteria(password) {
         const passwordCriteria = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&^*])(?=.{8,})/

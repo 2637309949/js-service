@@ -1,4 +1,5 @@
 const sequelize = require('comm').sequelize
+const moment = require('moment')
 const DataTypes = sequelize.DataTypes
 const {
     define,

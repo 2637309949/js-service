@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const csl = require('./consul')
 const define = require('../sequelize/define')
 let rts = {}
+let mixins = []
 
 rts.consul = {
     name: 'consul',
@@ -48,6 +49,14 @@ rts.sequelize = {
     },
     methods: {
     }
+}
+
+rts.withMixin = function (mixin) {
+    mixins.push(mixin)
+}
+
+rts.getMixins = function () {
+    return mixins
 }
 
 module.exports = rts

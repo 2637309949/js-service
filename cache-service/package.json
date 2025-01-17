@@ -1,10 +1,13 @@
 {
-  "name": "web-service",
+  "name": "cache-service",
   "scripts": {
     "link": "npm link comm",
-    "dev": "node index"
+    "start": "node index"
   },
   "dependencies": {
+    "@keyv/memcache": "^2.0.1",
+    "@keyv/redis": "^4.2.0",
+    "cache-manager": "^6.3.2",
     "comm": "file:../comm"
   },
   "_moduleDirectories": [
