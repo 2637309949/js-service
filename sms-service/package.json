@@ -1,0 +1,17 @@
+{
+  "name": "sms-service",
+  "scripts": {
+    "link": "npm link comm",
+    "start": "node index"
+  },
+  "dependencies": {
+    "comm": "file:../comm",
+    "moment": "^2.30.1"
+  },
+  "_moduleDirectories": [
+    "../"
+  ],
+  "_moduleRequires": [
+    "src/**/*.js"
+  ]
+}

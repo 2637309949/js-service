@@ -6,6 +6,13 @@ const {
 } = moleculer
 
 withMethod({
+    genVerificationCode() {
+        let captcha = '';
+        for (let i = 0; i < 6; i++) {
+          captcha += Math.floor(Math.random() * 10)
+        }
+        return captcha
+    },
     getLoginVerificationCode(id) {
         return `code:login:${id}`
     },

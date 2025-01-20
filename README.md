@@ -1,11 +1,11 @@
-![Moleculer logo](web-service/public/assets/logo.png)
+![Moleculer logo](apigate-service/public/assets/logo.png)
 
 ## Getting Started
 
 ```zsh
 $ npm install
 $ npm link
-$ npm dev
+$ npm start
 ```
 
 ## Feature

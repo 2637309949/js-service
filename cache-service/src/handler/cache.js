@@ -8,6 +8,7 @@ withAction({
     async set(ctx) {
         this.check(ctx, 'key', 'value')
         const { key, value, ttl } = ctx.params
+        this.info(ctx, `key[${key}] value[${value} ttl[${ttl}]`)
         return this.set(key, value, ttl)
     },
     async mset(ctx) {

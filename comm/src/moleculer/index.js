@@ -230,6 +230,20 @@ rts.createService = async function (...opts) {
                 if (rsp.length) {
                     throw new ValidationError(`参数[${rsp.join(',')}]不能为空!`)
                 }
+            },
+            checkOr(ctx, ...props) {
+                let or = false
+                const obj = ctx.params
+                for (let i = 0; i < props.length; i++) {
+                    const prop = props[i]
+                    if (obj[prop]) {
+                        or = true
+                        break
+                    }
+                }
+                if (!or) {
+                    throw new ValidationError(`参数[${props.join(',')}]不能同时为空!`)
+                }
             }
         },
         actions: {}
