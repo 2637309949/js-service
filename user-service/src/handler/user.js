@@ -13,10 +13,11 @@ withAction({
         rest: 'GET /queryUserDetail',
         async handler(ctx) {
             this.check(ctx, 'id')
+            const sequelize = this.initDb(ctx)
             const { id } = ctx.params
             const rsp = {}
             const where = { id }
-            const user = await this.queryUserDetailDB(ctx, where)
+            const user = await this.queryUserDetailDB(ctx, sequelize, where)
             if (!user) {
                 throw new BusinessServerError(`用户[${id}]不存在`)
             }
@@ -27,16 +28,19 @@ withAction({
         },
     },
     queryUser: {
+        auth: 'disabled',
         rest: 'GET /queryUser',
         async handler(ctx) {
             this.check(ctx, 'username')
+            const sequelize = this.initDb(ctx)
             const {
                 username,
+                userid,
                 pageNo = 1,
                 pageSize = 10 } = ctx.params
             const rsp = {}
-            const where = { username }
-            const [users, total] = await this.queryUserDB(ctx, where, null)
+            const where = { username, userid }
+            const [users, total] = await this.queryUserDB(ctx, sequelize, where, null)
             rsp.data = users
             rsp.totalCount = total
             rsp.curPage = pageNo
@@ -49,13 +53,14 @@ withAction({
         rest: 'POST /updateUser',
         async handler(ctx) {
             this.check(ctx, 'id', 'username', 'email')
+            const sequelize = this.initDb(ctx)
             const { id, username, email } = ctx.params
             const rsp = {}
             const where = { id }
             const updateFields = { id }
             if (username) updateFields.username = username
             if (email) updateFields.email = email
-            const user = await this.queryUserDetailDB(ctx, where)
+            const user = await this.queryUserDetailDB(ctx, sequelize, where)
             if (!user) {
                 throw new BusinessServerError(`用户ID ${id} 不存在`)
             }
@@ -73,10 +78,11 @@ withAction({
         rest: 'POST /deleteUser',
         async handler(ctx) {
             this.check(ctx, 'id')
+            const sequelize = this.initDb(ctx)
             const id = ctx.params.id
             const rsp = {}
             const where = { id }
-            await this.deleteUserDB(ctx, where)
+            await this.deleteUserDB(ctx, sequelize, where)
             rsp.data = where
             return rsp
         },
@@ -85,6 +91,7 @@ withAction({
         rest: 'POST /insertUser',
         async handler(ctx) {
             this.check(ctx, 'username', 'email')
+            const sequelize = this.initDb(ctx)
             const {
                 username,
                 email } = ctx.params
@@ -94,7 +101,7 @@ withAction({
 
             const rsp = {}
             const where = { email }
-            const user = await this.queryUserDetailDB(ctx, where)
+            const user = await this.queryUserDetailDB(ctx, sequelize, where)
             if (user) {
                 throw new BusinessServerError(`用户Email[${email}]已存在`)
             }
@@ -111,6 +118,7 @@ withAction({
         rest: 'POST /saveUser',
         async handler(ctx) {
             this.check(ctx, 'id')
+            const sequelize = this.initDb(ctx)
             const { id, name, email } = ctx.params
             const updateFields = {}
             if (name) updateFields.name = name
@@ -125,16 +133,16 @@ withAction({
                 where.email = email
             }
 
-            const user = await this.queryUserDetailDB(ctx, where)
+            const user = await this.queryUserDetailDB(ctx, sequelize, where)
             if (!user) {
-                const insertedUser = await this.insertUserDB(ctx, updateFields)
+                const insertedUser = await this.insertUserDB(ctx, sequelize, updateFields)
                 if (!insertedUser) {
                     throw new BusinessServerError('新增用户失败')
                 }
                 rsp.data = insertedUser
             } else {
                 updateFields.id = user.id
-                const updatedUser = await this.updateUserDB(ctx, updateFields)
+                const updatedUser = await this.updateUserDB(ctx, sequelize, updateFields)
                 if (!updatedUser) {
                     throw new BusinessServerError('更新用户信息失败')
                 }

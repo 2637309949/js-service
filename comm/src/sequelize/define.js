@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize')
 const defines = []
-const rts = {}
 const defaultOpts = {
     attributes: {
         total: {
@@ -28,51 +27,59 @@ const defaultOpts = {
     sync: false
 }
 
-rts.getDefines = () => {
+function getDefines () {
     return defines
 }
 
-rts.define = (...options) => {
+function define (...options) {
     return defines[defines.push(options.reduce((acc, curr) => {
         curr(acc)
          return acc 
      }, {...defaultOpts}))-1]
 }
 
-rts.modelName = (modelName) => {
+function modelName (modelName) {
     return (opt) => {
         opt.modelName = modelName
     }
 }
 
-rts.attributes = (attributes) => {
+function attributes (attributes) {
     return (opt) => {
         opt.attributes = { ...opt.attributes, ...attributes }
     }
 }
 
-rts.options = (options) => {
+function options (options) {
     return (opt) => {
         opt.options = { ...opt.options, ...options }
     }
 }
 
-rts.associate = (associate) => {
+function associate (associate) {
     return (opt) => {
         opt.associate.push(associate)
     }
 }
 
-rts.addHook = (addHook) => {
+function addHook (addHook) {
     return (opt) => {
         opt.addHook.push(addHook)
     }
 }
 
-rts.sync = (flag) => {
+function sync (flag) {
     return (opt) => {
         opt.sync = flag
     }
 }
 
-module.exports = rts
+module.exports.getDefines = getDefines
+module.exports.define = define
+module.exports.modelName = modelName
+module.exports.attributes = attributes
+module.exports.options = options
+module.exports.associate = associate
+module.exports.addHook = addHook
+module.exports.sync = sync
+

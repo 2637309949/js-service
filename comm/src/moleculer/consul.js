@@ -1,16 +1,13 @@
 const Consul = require('Consul')
-const rts = {}
-const {
-    CONSUL_HOST,
-    CONSUL_PORT
-} = process.env
+const { CONSUL = "127.0.0.1:8500" } = process.env
+const [ host, port ] = CONSUL.split(":")
 
 const consul = new Consul({
-    host: CONSUL_HOST,
-    port: CONSUL_PORT
+    host,
+    port
 })
 
-rts.get = async (key) => {
+async function get(key) {
     let value = await consul.kv.get(key)
     if (value) {
         value = JSON.parse(value.Value)
@@ -18,22 +15,24 @@ rts.get = async (key) => {
     }
 }
 
-rts.CommConf = async (k) => {
-    const key = 'micro/config/common'
-    let value = await rts.get(key)
+async function CommConf (k) {
+    const key = 'micro/config/comm'
+    let value = await get(key)
     if (value) {
         return k === undefined ? value : value[k]
     }
 }
 
-rts.Conf = async (name, k) => {
+async function Conf (name, k) {
     const splits = ['micro', 'config', 'service']
     splits.push(name)
     const key = splits.join('/')
-    let value = await rts.get(key)
+    let value = await get(key)
     if (value) {
         return k === undefined ? value : value[k]
     }
 }
 
-module.exports = rts
+module.exports.CommConf = CommConf
+module.exports.Conf = Conf
+

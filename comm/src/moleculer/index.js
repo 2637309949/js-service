@@ -1,8 +1,12 @@
 const _ = require("lodash")
-const { ServiceBroker, Middlewares, Errors: {
-    ValidationError,
-    MoleculerError
-} } = require('moleculer')
+const { 
+    ServiceBroker, 
+    Middlewares, 
+    Errors: {
+        ValidationError,
+        MoleculerError
+    } 
+} = require('moleculer')
 const ApiService = require("moleculer-web")
 const CronMixin = require("moleculer-cron")
 const consul = require('./consul')
@@ -100,14 +104,7 @@ function fileFormatter(level, args, bindings, { printArgs }) {
     return [`[${timestamp}]`, level.toUpperCase(), msg]
 }
 
-let rts = {
-    ...actions,
-    ...methods,
-    ...crons,
-    errors
-}
-
-rts.createService = async function (...opts) {
+async function createService (...opts) {
     const ccf = await consul.CommConf()
     let c = {}
     const namespace = ccf.env
@@ -249,12 +246,12 @@ rts.createService = async function (...opts) {
         actions: {}
     }
 
-    opts.push(rts.withMixins(mixins.consul))
-    opts.push(rts.withMixins(mixins.sequelize))
-    opts.push(rts.withMixins(...mixins.getMixins()))
-    opts.push(rts.withActions(actions.getActions()))
-    opts.push(rts.withMethods(methods.getMethods()))
-    opts.push(rts.withCrons(...crons.getCrons()))
+    opts.push(withMixins(mixins.consul))
+    opts.push(withMixins(mixins.sequelize))
+    opts.push(withMixins(...mixins.getMixins()))
+    opts.push(withActions(actions.getActions()))
+    opts.push(withMethods(methods.getMethods()))
+    opts.push(withCrons(...crons.getCrons()))
    
     for (let i = 0; i < opts.length; i++) {
         let opt = opts[i]
@@ -275,48 +272,49 @@ rts.createService = async function (...opts) {
     broker = new ServiceBroker(c.broker)
     broker.createService(c.schema)
     broker.start().catch(err => broker.logger.error(err))
+
     return broker
 }
 
-rts.createWeb = function (...opts) {
-    return rts.createService(rts.withMixins(ApiService), ...opts)
+function createWeb (...opts) {
+    return createService(withMixins(ApiService), ...opts)
 }
 
-rts.createCron = function (...opts) {
-    return rts.createService(rts.withMixins(CronMixin), ...opts)
+function createCron (...opts) {
+    return createService(withMixins(CronMixin), ...opts)
 }
 
-rts.withBrokerOptions = function (brokerOptions) {
+function withBrokerOptions (brokerOptions) {
     return function (s) {
         s.brokerOptions = _.merge(s.brokerOptions, brokerOptions)
     }
 }
 
-rts.withSchema = function (schema) {
+function withSchema (schema) {
     return function (s) {
         s.schema = _.merge(s.schema, schema)
     }
 }
 
-rts.withName = function (name) {
+function withName (name) {
     return function (s) {
         s.schema.name = name
     }
 }
 
-rts.withActions = function (actions) {
+function withActions (actions) {
     return function (s) {
         Object.assign(s.schema.actions, actions)
     }
 }
 
-rts.withMethods = function (methods) {
+function withMethods (methods) {
     return function (s) {
         Object.assign(s.schema.methods, methods)
     }
 }
 
-rts.withCrons = function (...crons) {
+function withCrons (...crons) {
     return async function (s) {
         const ccf = await consul.CommConf()
         crons.forEach(cron => {
@@ -332,17 +330,32 @@ rts.withCrons = function (...crons) {
     }
 }
 
-rts.withMixin = mixins.withMixin
-rts.withMixins = function (...mixins) {
+function withMixins (...mixins) {
     return function (s) {
         s.schema.mixins = s.schema.mixins.concat(mixins)
     }
 }
 
-rts.withSettings = function (setting) {
+function withSettings (setting) {
     return function (s) {
         Object.assign(s.schema.settings, setting)
     }
 }
 
-module.exports = rts
+module.exports.createService = createService
+module.exports.createWeb = createWeb
+module.exports.createCron = createCron
+module.exports.withBrokerOptions = withBrokerOptions
+module.exports.withName = withName
+module.exports.withSchema = withSchema
+module.exports.withActions = withActions
+module.exports.withMethods = withMethods
+module.exports.withCrons = withCrons
+module.exports.withMixin = mixins.withMixin
+module.exports.withMixins = withMixins
+module.exports.withSettings = withSettings
+module.exports.errors = errors
+
+Object.assign(module.exports, actions)
+Object.assign(module.exports, methods)
+Object.assign(module.exports, crons)
