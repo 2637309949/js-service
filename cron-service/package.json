@@ -1,8 +1,9 @@
 {
-  "name": "cron-service",
+  "name": "cron",
   "scripts": {
     "link": "npm link comm",
-    "start": "node index"
+    "start": "node index",
+    "build": "node build"
   },
   "dependencies": {
     "comm": "file:../comm"

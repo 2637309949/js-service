@@ -1,0 +1,8 @@
+./consul agent \
+-server \
+-bootstrap-expect=1 \
+-http-port=8400 \
+-data-dir=comm/data/consul \
+-bind="172.30.10.72" \
+-advertise="172.30.10.72" \
+-ui=true

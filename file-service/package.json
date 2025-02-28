@@ -1,8 +1,9 @@
 {
-  "name": "file-service",
+  "name": "file",
   "scripts": {
     "link": "npm link comm",
-    "start": "node index"
+    "start": "node index",
+    "build": "node build"
   },
   "dependencies": {
     "comm": "file:../comm",

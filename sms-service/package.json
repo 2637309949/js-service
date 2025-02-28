@@ -1,13 +1,14 @@
 {
-  "name": "sms-service",
+  "name": "sms",
   "scripts": {
     "link": "npm link comm",
-    "start": "node index"
+    "start": "node index",
+    "build": "node build"
   },
   "dependencies": {
     "comm": "file:../comm",
     "moment": "^2.30.1"
-  },
+  },  
   "_moduleDirectories": [
     "../"
   ],

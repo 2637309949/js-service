@@ -1,0 +1,6 @@
+{
+  "name": "make",
+  "main": "index.js",
+  "version": "1.0.0",
+  "bin": {"make": "./bin/index.js"}
+}

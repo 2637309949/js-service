@@ -67,7 +67,11 @@ define(
     sync(false),
     modelName('User'),
     options({
-        tableName: 't_user',
-        timestamps: true
+        tableName(u) {
+            if (u.userid) {
+                return `t_user_${(u.userid % 1000).toString().padStart(3, '0')}`
+            }
+            return 't_user'
+        }
     })
 )

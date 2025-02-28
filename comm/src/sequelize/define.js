@@ -1,15 +1,8 @@
+const _ = require('lodash')
 const { DataTypes } = require('sequelize')
 const defines = []
 const defaultOpts = {
     attributes: {
-        total: {
-            type: DataTypes.VIRTUAL
-        },
-        deletedAt: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-            defaultValue: 0
-        }
     },
     options: {
         timestamps: false,
@@ -18,9 +11,8 @@ const defaultOpts = {
         collate: 'utf8mb4_general_ci',
         defaultScope: {
             where: {
-                deletedAt: 0,
             },
-        },
+        }
     },
     associate: [],
     addHook: [],

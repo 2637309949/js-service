@@ -1,9 +1,23 @@
+const _ = require('lodash')
 const Sequelize = require('sequelize')
+const mysql2 = require('mysql2')
 const crypto = require('crypto')
 const csl = require('./consul')
+
 const define = require('../sequelize/define')
 let mixins = []
 const keyb64 = 'EsWSXS3S56C6p8jWT99g/w=='
+
+// for ncc build
+Sequelize.addHook('beforeInit', (config, options) => {
+    switch (options.dialect) {
+        case 'mysql':
+            options.dialectModule = mysql2
+            break
+        default:
+            break
+    }
+})
 
 function decryptPassword(passwdBase64) {
     const key = Buffer.from(keyb64)
@@ -44,6 +58,10 @@ const sequelize = {
         db.forEach(v => {
             let c = {uri: `mysql://${v.user}:${v.passwd}@${v.host}:${v.port}/${v.db}`}
             c.db = v.db
+            c.user = v.user
+            c.passwd = v.passwd
+            c.host = v.host
+            c.port = v.port
             c.pool = 20
             c.charset = 'utf8mb4'
             c.parseTime = 'true'
@@ -71,6 +89,17 @@ const sequelize = {
                 associate.forEach(funk => {
                     funk(model, sequelize.models)
                 })
+                model.prototype.splitTable = model.splitTable = function(u) {
+                    const sequelize = this.sequelize
+                    const modelName = this.name.singular
+                    const attributes = this.rawAttributes
+                    const tableName = this.options.tableName(u)
+                    const options = _.cloneDeep(this.options)
+                    options.tableName = tableName
+                    const m = sequelize.define(modelName, attributes, options)
+                    sequelize.models[modelName] = model
+                    return m
+                }
             })
             if (!dbs[v.db]) {
                 od.push(v.db)
@@ -87,7 +116,6 @@ const sequelize = {
         initDb(ctx, ...keys) {
             const key = keys.length > 0 ? keys[0] : 0
             const dbName = this.od[0]
-            console.log(666, dbName)
             const dbs = this.dbs[dbName]
             const sequelize = dbs[key % dbs.length]
             return sequelize

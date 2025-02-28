@@ -1,13 +1,15 @@
 {
-  "name": "user-service",
+  "name": "user",
   "scripts": {
     "link": "npm link comm",
-    "start": "node index"
+    "start": "node index",
+    "build": "node build"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "comm": "file:../comm",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "moment": "^2.30.1"
   },
   "_moduleDirectories": [

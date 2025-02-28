@@ -37,8 +37,11 @@ logs/
 # assets file dir
 assets/
 comm/assert/consul
+comm/test
+comm/data/consul
 public/
 
 *.exe
 *.test
 *.prof
+*.ncc

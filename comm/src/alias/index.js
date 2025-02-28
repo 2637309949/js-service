@@ -1,5 +1,6 @@
-let BuiltinModule = require('module')
-let {
+const BuiltinModule = require('module')
+const fs = require('fs')
+const {
   globSync
 } = require('glob')
 
@@ -230,6 +231,18 @@ function getMainModule () {
   return require.main._simulateRepl ? undefined : require.main
 }
 
+function buildAlias (options) {
+  const currentDir = options || process.cwd()
+  const relativePaths = moduleRequires.map(abs => {
+    return nodePath.relative(currentDir, abs).replace(/\\+/g, '/')
+  })
+  const requireStatements = relativePaths
+    .map(relativePath => `require('./${relativePath}')`)
+    .join('\n')
+  const outputFilePath = nodePath.join(currentDir, 'alias.js')
+  fs.writeFileSync(outputFilePath, requireStatements, 'utf8')
+}
+
 module.exports = init
 module.exports.init = init
 module.exports.addPath = addPath
@@ -238,3 +251,4 @@ module.exports.addAliases = addAliases
 module.exports.isPathMatchesAlias = isPathMatchesAlias
 module.exports.reset = reset
 module.exports.moduleRequires = moduleRequires
+module.exports.buildAlias = buildAlias

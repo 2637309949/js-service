@@ -3,9 +3,11 @@ const alias = require('./alias')
 const moleculer = require('./moleculer')
 const sequelize = require('./sequelize')
 
-const rts = {}
-rts.moleculer = moleculer
-rts.sequelize = sequelize
-module.exports = rts
+module.exports.moleculer = moleculer
+module.exports.sequelize = sequelize
+module.exports.alias = alias
 
-alias.init(process.cwd())
+// for nopacked
+if (eval('typeof __unused_webpack_exports') === 'undefined') {
+    alias.init(process.cwd())
+}

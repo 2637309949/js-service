@@ -8,9 +8,8 @@ const {
 } = moleculer
 
 withMethod({
-    async queryUserAddressDB(ctx, where, ...count) {
+    async queryUserAddressDB(ctx, sequelize, where, ...count) {
         try {
-            const sequelize = this.sequelize
             const options = { where, attributes: { exclude: ['deletedAt', 'password'] } }
             options.logging = msg => {
                 const sqlMatch = msg.match(/^Executing \(default\): (.*?);?$/)

@@ -1,15 +1,16 @@
 {
-  "name": "cache-service",
+  "name": "cache",
   "scripts": {
     "link": "npm link comm",
-    "start": "node index"
+    "start": "node index",
+    "build": "node build"
   },
   "dependencies": {
     "@keyv/memcache": "^2.0.1",
     "@keyv/redis": "^4.2.0",
     "cache-manager": "^6.3.2",
     "comm": "file:../comm"
-  },
+  },  
   "_moduleDirectories": [
     "../"
   ],
