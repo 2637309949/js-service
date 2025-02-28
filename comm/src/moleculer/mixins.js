@@ -1,23 +1,11 @@
 const _ = require('lodash')
 const Sequelize = require('sequelize')
-const mysql2 = require('mysql2')
 const crypto = require('crypto')
 const csl = require('./consul')
 
 const define = require('../sequelize/define')
 let mixins = []
 const keyb64 = 'EsWSXS3S56C6p8jWT99g/w=='
-
-// for ncc build
-Sequelize.addHook('beforeInit', (config, options) => {
-    switch (options.dialect) {
-        case 'mysql':
-            options.dialectModule = mysql2
-            break
-        default:
-            break
-    }
-})
 
 function decryptPassword(passwdBase64) {
     const key = Buffer.from(keyb64)

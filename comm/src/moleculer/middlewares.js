@@ -2,12 +2,13 @@ const fs = require("fs")
 const kleur = require("kleur")
 const path = require("path")
 const _ = require("lodash")
+const { 
+    Middlewares
+} = require('moleculer')
 const alias = require("../alias")
 const { clearRequireCache, uniq } = require("../util")
 
-let rts = {}
-
-rts.HotReloadMiddleware = function HotReloadMiddleware(broker) {
+function HotReloadMiddleware(broker) {
 	const cache = new Map()
 
 	let projectFiles = new Map()
@@ -15,9 +16,7 @@ rts.HotReloadMiddleware = function HotReloadMiddleware(broker) {
 
 	function hotReloadService(service) {
 		const relPath = path.relative(process.cwd(), service.__filename)
-
 		broker.logger.info(`Hot reload '${service.name}' service...`, kleur.grey(relPath))
-
 		return broker.destroyService(service).then(() => {
 			if (fs.existsSync(service.__filename)) {
 				try {
@@ -299,5 +298,4 @@ rts.HotReloadMiddleware = function HotReloadMiddleware(broker) {
 	}
 }
 
-
-module.exports = rts
+module.exports.HotReloadMiddleware = Middlewares.HotReload = HotReloadMiddleware

@@ -1,11 +1,9 @@
 const Consul = require('Consul')
-const { CONSUL = "127.0.0.1:8500" } = process.env
-const [ host, port ] = CONSUL.split(":")
-
-const consul = new Consul({
-    host,
-    port
-})
+const [ 
+    host, 
+    port 
+] = (process.env.CONSUL || '127.0.0.1:8500').split(":")
+const consul = new Consul({ host, port })
 
 async function get(key) {
     let value = await consul.kv.get(key)

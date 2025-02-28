@@ -1,7 +1,6 @@
 const _ = require("lodash")
 const { 
     ServiceBroker, 
-    Middlewares, 
     Errors: {
         ValidationError,
         MoleculerError
@@ -9,19 +8,16 @@ const {
 } = require('moleculer')
 const ApiService = require("moleculer-web")
 const CronMixin = require("moleculer-cron")
+const path = require('path')
+const chalk = require('chalk')
+const middlewares = require('./middlewares')
 const consul = require('./consul')
 const mixins = require('./mixins')
 const actions = require('./actions')
 const methods = require('./methods')
 const crons = require('./crons')
 const errors = require('./errors')
-const middlewares = require('./middlewares')
 const util = require('../util')
-const path = require('path')
-const chalk = require('chalk')
-
-// override HotReload
-Middlewares.HotReload = middlewares.HotReloadMiddleware
 
 let lut = []
 let broker = null

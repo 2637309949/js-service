@@ -1,5 +1,18 @@
 const _ = require('lodash')
-const { DataTypes } = require('sequelize')
+const Sequelize = require('sequelize')
+const mysql2 = require('mysql2')
+
+// for ncc build
+Sequelize.addHook('beforeInit', (config, options) => {
+    switch (options.dialect) {
+        case 'mysql':
+            options.dialectModule = mysql2
+            break
+        default:
+            break
+    }
+})
+
 const defines = []
 const defaultOpts = {
     attributes: {
