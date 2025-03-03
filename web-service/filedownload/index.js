@@ -6,4 +6,4 @@ const {
 } = moleculer
 
 // Start the broker
-createService(withName('file'))
+createService(withName('filedownload'))

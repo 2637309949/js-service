@@ -1,0 +1,19 @@
+{
+  "name": "filedownload",
+  "scripts": {
+    "link": "npm link comm",
+    "start": "node index",
+    "build": "node build"
+  },
+  "dependencies": {
+    "comm": "file:../comm",
+    "fs-extra": "^11.2.0"
+  },
+  "_moduleDirectories": [
+    "../"
+  ],
+  "_moduleRequires": [
+    "handler/**/*.js",
+    "models/**/*.js"
+  ]
+}

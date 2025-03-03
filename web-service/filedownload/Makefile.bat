@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 set INSTALL_PATH=C:\\js-micro
-set SERVICE_NAME=sms.ncc
+set SERVICE_NAME=filedownload.ncc
 set CMD= 
 :: 构建执行文件
 echo build %SERVICE_NAME%

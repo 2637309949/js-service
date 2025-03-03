@@ -10,9 +10,50 @@ const {
 } = moleculer
 
 withAction({
+    login: {
+        auth: 'disabled',
+        rest: 'POST /login',
+        desc: '通用登录接口,实际可根据不同的scope进行不同的登录逻辑',
+        async handler(ctx) {
+            this.check(ctx, 'email', 'password', 'verificationCode')
+            const { email, password, verificationCode } = ctx.params
+
+            const loginVerificationCode = await ctx.call('cache.get', { key: this.getLoginVerificationCode(email) })
+            if (loginVerificationCode != verificationCode) {
+                throw new BusinessServerError('验证码错误!', 61000, [{ field: 'verificationCode', message: 'is wrong' }])
+            }
+
+            let where = { email }
+            let user = await this.queryUserDetailDB(ctx, where)
+            if (!user) {
+                throw new BusinessServerError('邮箱或密码错误!', 61000, [{ field: 'email', message: 'is not found' }])
+            }
+            const res = await this.comparePassword(password, user.password)
+            if (!res)
+                throw new BusinessServerError('邮箱或密码错误!', 61000, [{ field: 'email', message: 'is not found' }])
+
+            const rsp = {}
+            const today = new Date()
+            const exp = new Date(today)
+            const authSecret = await this.CommConf('authSecret')
+            exp.setHours(5, 0, 0, 0)
+            exp.setDate(today.getDate() + 1)
+            const expired = Math.floor(exp.getTime() / 1000)
+            user = { userId: user.id, userName: user.username }
+            const token = jwt.sign({
+                id: user.id,
+                exp: expired
+            }, authSecret)
+            user.token = token
+            user.expired = expired
+            rsp.data = user
+            return rsp
+        },
+    },
     register: {
         auth: 'disabled',
         rest: 'POST /register',
+        desc: '通用注册接口,实际可根据不同的scope进行不同的注册逻辑',
         async handler(ctx) {
             this.check(ctx, 'email', 'username', 'password', 'verificationCode')
             const { email, username, verificationCode } = ctx.params
@@ -35,45 +76,6 @@ withAction({
             if (!user) {
                 throw new BusinessServerError('新增用户失败')
             }
-
-            const rsp = {}
-            const today = new Date()
-            const exp = new Date(today)
-            const authSecret = await this.CommConf('authSecret')
-            exp.setHours(5, 0, 0, 0)
-            exp.setDate(today.getDate() + 1)
-            const expired = Math.floor(exp.getTime() / 1000)
-            user = { userId: user.id, userName: user.username }
-            const token = jwt.sign({
-                id: user.id,
-                exp: expired
-            }, authSecret)
-            user.token = token
-            user.expired = expired
-            rsp.data = user
-            return rsp
-        },
-    },
-    login: {
-        auth: 'disabled',
-        rest: 'POST /login',
-        async handler(ctx) {
-            this.check(ctx, 'email', 'password', 'verificationCode')
-            const { email, password, verificationCode } = ctx.params
-
-            const loginVerificationCode = await ctx.call('cache.get', { key: this.getLoginVerificationCode(email) })
-            if (loginVerificationCode != verificationCode) {
-                throw new BusinessServerError('验证码错误!', 61000, [{ field: 'verificationCode', message: 'is wrong' }])
-            }
-
-            let where = { email }
-            let user = await this.queryUserDetailDB(ctx, where)
-            if (!user) {
-                throw new BusinessServerError('邮箱或密码错误!', 61000, [{ field: 'email', message: 'is not found' }])
-            }
-            const res = await this.comparePassword(password, user.password)
-            if (!res)
-                throw new BusinessServerError('邮箱或密码错误!', 61000, [{ field: 'email', message: 'is not found' }])
 
             const rsp = {}
             const today = new Date()
@@ -157,6 +159,7 @@ withAction({
             token: 'string'
         },
         visibility: 'public', // 不暴露网关
+        desc: '通用鉴权中间件,实际可根据不同的host进行不同的鉴权逻辑',
         async handler(ctx) {
             const token = ctx.params.token
             const authSecret = await this.CommConf('authSecret')

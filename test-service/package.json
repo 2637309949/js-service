@@ -1,5 +1,5 @@
 {
-  "name": "file",
+  "name": "test",
   "scripts": {
     "link": "npm link comm",
     "start": "node index",
@@ -7,8 +7,8 @@
   },
   "dependencies": {
     "comm": "file:../comm",
-    "fs-extra": "^11.2.0"
-  },
+    "moment": "^2.30.1"
+  },  
   "_moduleDirectories": [
     "../"
   ],

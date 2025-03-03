@@ -3,12 +3,6 @@ const path = require('path')
 const fs = require('fs')
 const { execFileSync } = require('child_process')
 
-class NotFoundMakeFileError extends Error {
-    constructor(cli) {
-        super('')
-    }
-}
-
 function executeMakefile(makefilePath, ...args) {
     try {
          execFileSync(makefilePath, args, { stdio: 'inherit' })
