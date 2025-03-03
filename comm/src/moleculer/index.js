@@ -1,4 +1,3 @@
-const _ = require("lodash")
 const { 
     ServiceBroker, 
     Errors: {
@@ -16,47 +15,13 @@ const mixins = require('./mixins')
 const actions = require('./actions')
 const methods = require('./methods')
 const crons = require('./crons')
+const options = require('./options')
 const errors = require('./errors')
 const util = require('../util')
 
-let lut = []
+middlewares.replaceHotReload()
+
 let broker = null
-
-for (let i = 0; i < 256; i++) {
-    lut[i] = (i < 16 ? "0" : "") + i.toString(16)
-}
-
-function uidGenerator() {
-    const d0 = (Math.random() * 0xffffffff) | 0;
-    const d1 = (Math.random() * 0xffffffff) | 0;
-    const d2 = (Math.random() * 0xffffffff) | 0;
-    const d3 = (Math.random() * 0xffffffff) | 0;
-    let uid = (
-        lut[d0 & 0xff] +
-        lut[(d0 >> 8) & 0xff] +
-        lut[(d0 >> 16) & 0xff] +
-        lut[(d0 >> 24) & 0xff] +
-        "-" +
-        lut[d1 & 0xff] +
-        lut[(d1 >> 8) & 0xff] +
-        "-" +
-        lut[((d1 >> 16) & 0x0f) | 0x40] +
-        lut[(d1 >> 24) & 0xff] +
-        "-" +
-        lut[(d2 & 0x3f) | 0x80] +
-        lut[(d2 >> 8) & 0xff] +
-        "-" +
-        lut[(d2 >> 16) & 0xff] +
-        lut[(d2 >> 24) & 0xff] +
-        lut[d3 & 0xff] +
-        lut[(d3 >> 8) & 0xff] +
-        lut[(d3 >> 16) & 0xff] +
-        lut[(d3 >> 24) & 0xff]
-    )
-    uid = uid.replace(/-/g, "").substring(0, 16)
-    return uid
-}
-
 function consoleFormatter(level, args, bindings, { printArgs }) {
     const date = new Date
     const year = date.getFullYear()
@@ -101,10 +66,10 @@ function fileFormatter(level, args, bindings, { printArgs }) {
 }
 
 async function createService (...opts) {
-    const ccf = await consul.CommConf()
+    const cc = await consul.CommConf()
     let c = {}
-    const namespace = ccf.env
-    const hotReload = ccf.env === 'dev' || ccf.env === 'test'
+    const namespace = cc.env
+    const hotReload = cc.env === 'dev' || cc.env === 'test'
     const logLevel = 'info'
     c.broker = {
         namespace,
@@ -148,7 +113,7 @@ async function createService (...opts) {
                 }
             }
         },
-        uidGenerator,
+        uidGenerator: util.uidGenerator,
         middlewares: [{
             localAction(next, action) {
                 return function (ctx) {
@@ -242,12 +207,12 @@ async function createService (...opts) {
         actions: {}
     }
 
-    opts.push(withMixins(mixins.consul))
-    opts.push(withMixins(mixins.sequelize))
-    opts.push(withMixins(...mixins.getMixins()))
-    opts.push(withActions(actions.getActions()))
-    opts.push(withMethods(methods.getMethods()))
-    opts.push(withCrons(...crons.getCrons()))
+    opts.push(options.withMixins(mixins.consul))
+    opts.push(options.withMixins(mixins.sequelize))
+    opts.push(options.withMixins(...mixins.getMixins()))
+    opts.push(options.withActions(actions.getActions()))
+    opts.push(options.withMethods(methods.getMethods()))
+    opts.push(options.withCrons(...crons.getCrons()))
    
     for (let i = 0; i < opts.length; i++) {
         let opt = opts[i]
@@ -273,85 +238,19 @@ async function createService (...opts) {
 }
 
 function createWeb (...opts) {
-    return createService(withMixins(ApiService), ...opts)
+    return createService(options.withMixins(ApiService), ...opts)
 }
 
 function createCron (...opts) {
-    return createService(withMixins(CronMixin), ...opts)
-}
-
-function withBrokerOptions (brokerOptions) {
-    return function (s) {
-        s.brokerOptions = _.merge(s.brokerOptions, brokerOptions)
-    }
-}
-
-function withSchema (schema) {
-    return function (s) {
-        s.schema = _.merge(s.schema, schema)
-    }
-}
-
-function withName (name) {
-    return function (s) {
-        s.schema.name = name
-    }
-}
-
-function withActions (actions) {
-    return function (s) {
-        Object.assign(s.schema.actions, actions)
-    }
-}
-
-function withMethods (methods) {
-    return function (s) {
-        Object.assign(s.schema.methods, methods)
-    }
-}
-
-function withCrons (...crons) {
-    return async function (s) {
-        const ccf = await consul.CommConf()
-        crons.forEach(cron => {
-            if (util.isString(cron.env) && cron.env !== ccf.env) {
-                return
-            }
-            if (Array.isArray(cron.env) && !cron.env.includes(ccf.env)) {
-                return
-            }
-            s.schema.settings.cronJobs.push(cron)
-            s.schema.actions[cron.name] = cron.onTick
-        })
-    }
-}
-
-function withMixins (...mixins) {
-    return function (s) {
-        s.schema.mixins = s.schema.mixins.concat(mixins)
-    }
-}
-
-function withSettings (setting) {
-    return function (s) {
-        Object.assign(s.schema.settings, setting)
-    }
+    return createService(options.withMixins(CronMixin), ...opts)
 }
 
 module.exports.createService = createService
 module.exports.createWeb = createWeb
 module.exports.createCron = createCron
-module.exports.withBrokerOptions = withBrokerOptions
-module.exports.withName = withName
-module.exports.withSchema = withSchema
-module.exports.withActions = withActions
-module.exports.withMethods = withMethods
-module.exports.withCrons = withCrons
-module.exports.withMixin = mixins.withMixin
-module.exports.withMixins = withMixins
-module.exports.withSettings = withSettings
 module.exports.errors = errors
 
+Object.assign(module.exports, options)
 Object.assign(module.exports, actions)
 Object.assign(module.exports, methods)
 Object.assign(module.exports, crons)

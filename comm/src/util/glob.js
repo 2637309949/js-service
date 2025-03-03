@@ -1,4 +1,3 @@
 
-const rts = {}
-module.exports = rts
+module.exports = {}
 

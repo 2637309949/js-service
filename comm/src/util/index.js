@@ -1,9 +1,7 @@
 const glob = require('./glob')
+const uid = require('./uid')
 
-const rts = {}
-rts.require = glob.require
-
-rts.clearRequireCache = function (filename) {
+function clearRequireCache(filename) {
     Object.keys(require.cache).forEach(function (key) {
         if (key == filename) {
             delete require.cache[key]
@@ -11,7 +9,7 @@ rts.clearRequireCache = function (filename) {
     })
 }
 
-rts.makeDirs = function makeDirs(p) {
+function makeDirs(p) {
     p.split(path.sep).reduce((prevPath, folder) => {
         const currentPath = path.join(prevPath, folder, path.sep)
         if (!fs.existsSync(currentPath)) {
@@ -21,34 +19,46 @@ rts.makeDirs = function makeDirs(p) {
     }, "")
 }
 
-rts.isFunction = function isFunction(fn) {
+function isFunction(fn) {
     return typeof fn === "function"
 }
 
-rts.isString = function isString(s) {
+function isString(s) {
     return typeof s === "string" || s instanceof String
 }
 
-rts.isObject = function isObject(o) {
+function isObject(o) {
     return o !== null && typeof o === "object" && !(o instanceof String)
 }
 
-rts.isPlainObject = function isPlainObject(o) {
+function isPlainObject(o) {
     return o != null
         ? Object.getPrototypeOf(o) === Object.prototype || Object.getPrototypeOf(o) === null
         : false
 }
 
-rts.isDate = function isDate(d) {
+function isDate(d) {
     return d instanceof Date && !Number.isNaN(d.getTime())
 }
 
-rts.isPromise = function (fn) {
+function isPromise(fn) {
     return (fn && typeof fn.then === 'function' && typeof fn.catch === 'function') || (fn && fn.constructor.name === 'AsyncFunction')
 }
 
-rts.uniq = function uniq(arr) {
+function uniq(arr) {
     return [...new Set(arr)]
 }
 
-module.exports = rts
+module.exports.clearRequireCache = clearRequireCache
+module.exports.makeDirs = makeDirs
+module.exports.isFunction = isFunction
+module.exports.isString = isString
+module.exports.isObject = isObject
+module.exports.isPlainObject = isPlainObject
+module.exports.isDate = isDate
+module.exports.isPromise = isPromise
+module.exports.uniq = uniq
+
+Object.assign(module.exports, uid)
+Object.assign(module.exports, glob)
+

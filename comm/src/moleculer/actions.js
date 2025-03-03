@@ -1,13 +1,13 @@
 
-let rts = {}
 let actions = {}
 
-rts.withAction = function (action) {
-    actions = {...actions, ...action}
+function withAction(action) {
+    Object.assign(actions, action)
 }
 
-rts.getActions = function () {
+function getActions() {
     return actions
 }
 
-module.exports = rts
+module.exports.withAction = withAction
+module.exports.getActions = getActions

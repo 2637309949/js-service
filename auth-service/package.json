@@ -16,6 +16,7 @@
     "../"
   ],
   "_moduleRequires": [
-    "src/**/*.js"
+    "handler/**/*.js",
+    "models/**/*.js"
   ]
 }

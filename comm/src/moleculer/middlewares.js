@@ -8,7 +8,7 @@ const {
 const alias = require("../alias")
 const { clearRequireCache, uniq } = require("../util")
 
-function HotReloadMiddleware(broker) {
+function hotReloadMiddleware(broker) {
 	const cache = new Map()
 
 	let projectFiles = new Map()
@@ -298,4 +298,9 @@ function HotReloadMiddleware(broker) {
 	}
 }
 
-module.exports.HotReloadMiddleware = Middlewares.HotReload = HotReloadMiddleware
+function replaceHotReload () {
+	Middlewares.HotReload = hotReloadMiddleware
+}
+
+module.exports.hotReloadMiddleware = hotReloadMiddleware
+module.exports.replaceHotReload = replaceHotReload

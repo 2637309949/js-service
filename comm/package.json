@@ -19,5 +19,9 @@
   "scripts": {
     "link": "npm link",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "graphviz": "^0.0.9",
+    "madge": "^8.0.0"
   }
 }
