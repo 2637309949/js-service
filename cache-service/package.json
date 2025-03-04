@@ -11,9 +11,6 @@
     "cache-manager": "^6.3.2",
     "comm": "file:../comm"
   },  
-  "_moduleDirectories": [
-    "../"
-  ],
   "_moduleRequires": [
     "handler/**/*.js",
     "models/**/*.js"

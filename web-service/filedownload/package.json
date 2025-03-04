@@ -9,9 +9,6 @@
     "comm": "file:../comm",
     "fs-extra": "^11.2.0"
   },
-  "_moduleDirectories": [
-    "../"
-  ],
   "_moduleRequires": [
     "handler/**/*.js",
     "models/**/*.js"

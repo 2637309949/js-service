@@ -1,4 +1,5 @@
 const comm = require('comm')
+const pkg = require('./package.json')
 const moleculer = comm.moleculer
 const {
     createService,
@@ -6,4 +7,4 @@ const {
 } = moleculer
 
 // Start the broker
-createService(withName('test'))
+createService(withName(pkg.name))

@@ -9,9 +9,6 @@
     "comm": "file:../comm",
     "moment": "^2.30.1"
   },  
-  "_moduleDirectories": [
-    "../"
-  ],
   "_moduleRequires": [
     "handler/**/*.js",
     "models/**/*.js"

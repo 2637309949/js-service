@@ -8,9 +8,6 @@
   "dependencies": {
     "comm": "file:../comm"
   },
-  "_moduleDirectories": [
-    "../"
-  ],
   "_moduleRequires": [
     "handler/**/*.js",
     "models/**/*.js"
