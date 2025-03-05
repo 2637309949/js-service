@@ -1,10 +1,10 @@
 const comm = require('comm')
 const pkg = require('./package.json')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     createCron,
     withName,
-} = moleculer
+} = micro
 
 // Start the broker
 createCron(withName(pkg.name))

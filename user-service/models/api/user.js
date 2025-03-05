@@ -1,9 +1,9 @@
 const comm = require('comm')
 const bcrypt = require('bcryptjs')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withMethod
-} = moleculer
+} = micro
 
 withMethod({
     genVerificationCode() {

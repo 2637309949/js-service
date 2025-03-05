@@ -1,8 +1,8 @@
 const comm = require('comm')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withCron
-} = moleculer
+} = micro
 
 // http://localhost:3000/api/cron/warn
 withCron({

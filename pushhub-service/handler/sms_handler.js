@@ -1,11 +1,11 @@
 const comm = require('comm')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withAction,
     errors: {
         BusinessServerError
     }
-} = moleculer
+} = micro
 
 withAction({
     querySmsDetail: {

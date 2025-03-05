@@ -1,8 +1,8 @@
 const comm = require('comm')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withMethod
-} = moleculer
+} = micro
 
 withMethod({
     async queryFileDB(ctx, where, ...count) {

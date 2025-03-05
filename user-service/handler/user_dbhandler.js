@@ -1,12 +1,12 @@
 const _ = require('lodash')
 const comm = require('comm')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withMethod,
     errors: {
         DatabaseServerError
     }
-} = moleculer
+} = micro
 
 withMethod({
     async queryUserDetailDB (ctx, sequelize, where) {

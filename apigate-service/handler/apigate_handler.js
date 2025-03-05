@@ -1,11 +1,11 @@
 const comm = require('comm')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withMethod,
     errors: {
         UnAuthorizedError
     }
-} = moleculer
+} = micro
 
 withMethod({
     async authorize(ctx, route, req) {

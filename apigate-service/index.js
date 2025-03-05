@@ -1,11 +1,11 @@
 const comm = require('comm')
 const pkg = require('./package.json')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     createWeb,
     withSettings,
     withName
-} = moleculer
+} = micro
 
 // Start the broker
 createWeb(

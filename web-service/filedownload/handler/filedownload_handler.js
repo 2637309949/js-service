@@ -1,8 +1,8 @@
 const comm = require('comm')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withAction
-} = moleculer
+} = micro
 
 withAction({
     async userInfo(ctx) {

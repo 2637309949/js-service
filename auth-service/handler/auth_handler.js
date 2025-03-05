@@ -1,13 +1,13 @@
 const comm = require('comm')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withAction,
     errors: {
         BusinessServerError
     }
-} = moleculer
+} = micro
 
 withAction({
     login: {

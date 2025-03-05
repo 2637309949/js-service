@@ -1,10 +1,10 @@
 const comm = require('comm')
 const fs = require("fs-extra")
 const path = require("path")
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withAction
-} = moleculer
+} = micro
 
 withAction({
     // File upload from HTML multipart form

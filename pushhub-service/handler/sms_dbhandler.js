@@ -1,11 +1,11 @@
 const comm = require('comm')
-const moleculer = comm.moleculer
+const micro = comm.micro
 const {
     withMethod,
     errors: {
         DatabaseServerError
     }
-} = moleculer
+} = micro
 
 withMethod({
     async querySmsDetailDB (ctx, where) {

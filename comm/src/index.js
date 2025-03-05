@@ -2,12 +2,12 @@ require('dotenv').config({
     path: ['../.env', '.env'] 
 })
 const alias = require('./alias')
-const moleculer = require('./moleculer')
+const micro = require('./micro')
 const sequelize = require('./sequelize')
 const util = require('./util')
 const unused = 'typeof __unused_webpack_exports'
 
-module.exports.moleculer = moleculer
+module.exports.micro = micro
 module.exports.sequelize = sequelize
 module.exports.alias = alias
 module.exports.util = util
