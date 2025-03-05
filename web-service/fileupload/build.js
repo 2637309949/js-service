@@ -1,13 +1,15 @@
 const fs = require('fs')
+const path = require('path')
 const comm = require('comm')
-const npmPackage = require('./package.json')
-
+const pkg = require('./package.json')
+const name = pkg.name
+const outputFile = `./${name}.ncc`
 const entryFile = './index.js'
-const outputFile = `./${npmPackage.name}.ncc`
 const alias = comm.alias.moduleRequires
+const nccLoc = path.join(require.resolve('comm'), "../../cmd/ncc")
+const ncc = require(nccLoc)
 
-const vercelNcc = require.resolve('@vercel/ncc', { paths: [process.env.NPM_CONFIG_PREFIX + '/node_modules'] })
-require(vercelNcc)(entryFile, {
+ncc(entryFile, {
     cache: false,
     externals: ["externalpackage"],
     filterAssetBase: process.cwd(),

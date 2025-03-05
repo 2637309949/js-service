@@ -1,13 +1,13 @@
 
-let rts = {}
 let methods = {}
 
-rts.withMethod = function (method) {
+function withMethod(method) {
     methods = {...methods, ...method}
 }
 
-rts.getMethods = function () {
+function getMethods() {
     return methods
 }
 
-module.exports = rts
+module.exports.getMethods = getMethods
+module.exports.withMethod = withMethod

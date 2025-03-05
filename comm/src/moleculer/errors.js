@@ -4,16 +4,6 @@ const { UnAuthorizedError } = ApiGateway.Errors
 
 // 应用错误
 class ApplicationServerError extends Errors.MoleculerServerError {
-	/**
-	 * Creates an instance of ApplicationServerError.
-	 *
-	 * @param {String?} message
-	 * @param {Number?} code
-	 * @param {String?} type
-	 * @param {any} data
-	 *
-	 * @memberof ApplicationServerError
-	 */
     constructor(message, code, type, data) {
 		super(message, code, type, data);
 	}
@@ -21,16 +11,6 @@ class ApplicationServerError extends Errors.MoleculerServerError {
 
 // 数据库
 class DatabaseServerError extends ApplicationServerError {
-	/**
-	 * Creates an instance of DatabaseServerError.
-	 *
-	 * @param {String?} message
-	 * @param {Number?} code
-	 * @param {String?} type
-	 * @param {any} data
-	 *
-	 * @memberof DatabaseServerError
-	 */
     constructor(message, data) {
 		super(message, 51000, 'DATA', data);
 	}
@@ -38,16 +18,6 @@ class DatabaseServerError extends ApplicationServerError {
 
 // 常规业务
 class BusinessServerError extends ApplicationServerError {
-	/**
-	 * Creates an instance of BusinessServerError.
-	 *
-	 * @param {String?} message
-	 * @param {Number?} code
-	 * @param {String?} type
-	 * @param {any} data
-	 *
-	 * @memberof BusinessServerError
-	 */
     constructor(message, code, data) {
 		super(message, code || 61000, 'BUSINESS', data);
 	}
@@ -55,26 +25,13 @@ class BusinessServerError extends ApplicationServerError {
 
 // 常规业务
 class ArithmeticServerError extends ApplicationServerError {
-	/**
-	 * Creates an instance of BusinessServerError.
-	 *
-	 * @param {String?} message
-	 * @param {Number?} code
-	 * @param {String?} type
-	 * @param {any} data
-	 *
-	 * @memberof BusinessServerError
-	 */
     constructor(message, code, data) {
 		super(message, code || 71000, 'ARITHMETIC', data);
 	}
 }
 
-
-module.exports = {
-    ...Errors,
-	UnAuthorizedError,
-    DatabaseServerError,
-    BusinessServerError,
-    ArithmeticServerError
-}
+Object.assign(module.exports, Errors)
+module.exports.UnAuthorizedError = UnAuthorizedError
+module.exports.DatabaseServerError = DatabaseServerError
+module.exports.BusinessServerError = BusinessServerError
+module.exports.ArithmeticServerError = ArithmeticServerError

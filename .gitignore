@@ -35,10 +35,7 @@ lib/
 logs/
 
 # assets file dir
-assets/
-comm/assert/consul
-comm/test
-comm/data/consul
+comm/assert/data/
 public/
 
 *.exe

@@ -1,13 +1,13 @@
-
-let rts = {}
 let crons = []
 
-rts.withCron = function (cron) {
+function withCron(cron) {
     crons.push(cron)
 }
 
-rts.getCrons = function () {
+function getCrons() {
     return crons
 }
 
-module.exports = rts
+module.exports.getCrons = getCrons
+module.exports.withCron = withCron
+

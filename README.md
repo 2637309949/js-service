@@ -1,5 +1,6 @@
+## Moleculer+
+
 ![Moleculer logo](apigate-service/public/assets/logo.png)
-## moleculer+
 
 ## 新增特性
 
@@ -13,10 +14,11 @@
 -  多策略认证模式，支持不同的认证方式
 -  内置`ncc`和`make`指令，方便跨平台编译
 
-## Getting Started
+## 快速入门
 
 ```zsh
 $ npm install
 $ npm link
 $ npm start
+$ npm build
 ```

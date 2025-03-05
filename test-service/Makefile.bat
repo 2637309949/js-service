@@ -7,7 +7,7 @@ set CMD=
 
 :: 构建执行文件
 echo build %SERVICE_NAME%
-call npm run build
+call node build
 
 :: 执行命令
 if "%1"=="install" (
