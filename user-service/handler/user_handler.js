@@ -1,5 +1,4 @@
 const comm = require('comm')
-const jwt = require("jsonwebtoken")
 const micro = comm.micro
 const {
     withAction,

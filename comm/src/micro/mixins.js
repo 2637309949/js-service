@@ -1,21 +1,10 @@
 const _ = require('lodash')
 const Sequelize = require('sequelize')
-const crypto = require('crypto')
 const csl = require('./consul')
-
+const util = require('../util')
 const define = require('../sequelize/define')
-let mixins = []
-const keyb64 = 'EsWSXS3S56C6p8jWT99g/w=='
-
-function decryptPassword(passwdBase64) {
-    const key = Buffer.from(keyb64)
-    const encryptedData = Buffer.from(passwdBase64, 'base64')
-    const decipher = crypto.createDecipheriv('des-ede3', key, null)
-    decipher.setAutoPadding(true) // PKCS5/PKCS7 填充
-    let decrypted = decipher.update(encryptedData)
-    decrypted = Buffer.concat([decrypted, decipher.final()])
-    return decrypted.toString('utf8')
-}
+const ede3 = util.ede3
+const mixins = []
 
 const consul = {
     name: 'consul',
@@ -40,7 +29,7 @@ const sequelize = {
         let db = await this.Conf('db')
         if (!db) return
         db = db.map(x => {
-            x.passwd = decryptPassword(x.passwd)
+            x.passwd = ede3.decryptPassword(x.passwd)
             return x
         })
         db.forEach(v => {
