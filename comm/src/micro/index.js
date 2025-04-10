@@ -189,6 +189,21 @@ async function createService (...opts) {
                     isEmail: (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
                     isNum: (value) => !isNaN(parseFloat(value)) && isFinite(value),
                     isStr: (value) => typeof value === 'string',
+                    matches: (value, regex) => {
+                        try {
+                            const regexObj = new RegExp(regex)
+                            return regexObj.test(value)
+                        } catch (e) {
+                            throw new Error(`无效的正则表达式: ${regex}`)
+                        }
+                    },
+                    in: (value, ...values) => values.includes(value),
+                    between: (value, min, max) => {
+                        const numValue = parseFloat(value)
+                        const numMin = parseFloat(min)
+                        const numMax = parseFloat(max)
+                        return numValue >= numMin && numValue <= numMax
+                    },
                 }
                 function parseValidationRule(rule) {
                     const ruleParts = rule.split('(')
