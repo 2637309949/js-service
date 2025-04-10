@@ -7,11 +7,13 @@ const {
     withName
 } = micro
 
+const port = process.env.PORT || 3000
+
 // Start the broker
 createWeb(
     withName(pkg.name),
     withSettings({
-        port: process.env.PORT,
+        port,
         routes: [{
             path: '/api',
             cors: true,

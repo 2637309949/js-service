@@ -7,8 +7,8 @@ const {
 withAction({
     queryUserAddress: {
         rest: 'GET /queryUserAddress',
-        async handler(ctx) {
-            this.check(ctx, 'userId')
+        handler: async function(ctx) {
+            this.validate(ctx, 'userId')
             const sequelize = this.initDb(ctx)
             const {
                 userId,

@@ -11,7 +11,7 @@ withAction({
     querySmsDetail: {
         rest: 'GET /querySmsDetail',
         auth: 'disabled',
-        async handler(ctx) {
+        handler: async function(ctx) {
             return rsp
         },
     }

@@ -10,8 +10,8 @@ const {
 withAction({
     querySmsDetail: {
         rest: 'GET /querySmsDetail',
-        async handler(ctx) {
-            this.check(ctx, 'id')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id')
             const { id } = ctx.params
             const rsp = {}
             const where = { id }
@@ -27,8 +27,8 @@ withAction({
     },
     querySms: {
         rest: 'GET /querySms',
-        async handler(ctx) {
-            this.check(ctx, 'type')
+        handler: async function(ctx) {
+            this.validate(ctx, 'type')
             const {
                 type,
                 pageNo = 1,
@@ -46,8 +46,8 @@ withAction({
     },
     updateSms: {
         rest: 'POST /updateSms',
-        async handler(ctx) {
-            this.check(ctx, 'id', 'from', 'to')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id', 'from', 'to')
             const { id, from, to, content } = ctx.params
             const rsp = {}
             const where = { id }
@@ -71,8 +71,8 @@ withAction({
     },
     deleteSms: {
         rest: 'POST /deleteSms',
-        async handler(ctx) {
-            this.check(ctx, 'id')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id')
             const id = ctx.params.id
             const rsp = {}
             const where = { id }
@@ -83,8 +83,8 @@ withAction({
     },
     insertSms: {
         rest: 'POST /insertSms',
-        async handler(ctx) {
-            this.check(ctx, 'desc', 'content', 'from', 'to')
+        handler: async function(ctx) {
+            this.validate(ctx, 'desc', 'content', 'from', 'to')
             const {
                 desc,
                 content,
@@ -108,8 +108,8 @@ withAction({
     },
     saveSms: {
         rest: 'POST /saveSms',
-        async handler(ctx) {
-            this.check(ctx, 'id')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id')
             const { id, 
                 content,
                 from,

@@ -14,8 +14,8 @@ withAction({
         auth: 'disabled',
         rest: 'POST /login',
         desc: '通用登录接口,实际可根据不同的scope进行不同的登录逻辑',
-        async handler(ctx) {
-            this.check(ctx, 'email', 'password', 'verificationCode')
+        handler: async function(ctx) {
+            this.validate(ctx, 'email', 'password', 'verificationCode')
             const { email, password, verificationCode } = ctx.params
 
             const loginVerificationCode = await ctx.call('cache.get', { key: this.getLoginVerificationCode(email) })
@@ -54,8 +54,8 @@ withAction({
         auth: 'disabled',
         rest: 'POST /register',
         desc: '通用注册接口,实际可根据不同的scope进行不同的注册逻辑',
-        async handler(ctx) {
-            this.check(ctx, 'email', 'username', 'password', 'verificationCode')
+        handler: async function(ctx) {
+            this.validate(ctx, 'email', 'username', 'password', 'verificationCode')
             const { email, username, verificationCode } = ctx.params
 
             const registedVerificationCode = await ctx.call('cache.get', { key: this.getRegistedVerificationCode(email) })
@@ -98,8 +98,8 @@ withAction({
     sendVerificationCode: {
         auth: 'disabled',
         rest: 'POST /sendVerificationCode',
-        async handler(ctx) {
-            this.check(ctx, 'scene')
+        handler: async function(ctx) {
+            this.validate(ctx, 'scene')
             this.checkOr(ctx, 'email', 'phone')
             const { email, phone, scene } = ctx.params
             let verificationCodeId
@@ -160,7 +160,7 @@ withAction({
         },
         visibility: 'public', // 不暴露网关
         desc: '通用鉴权中间件,实际可根据不同的host进行不同的鉴权逻辑',
-        async handler(ctx) {
+        handler: async function(ctx) {
             const token = ctx.params.token
             const authSecret = await this.CommConf('authSecret')
             const decoded = await new this.Promise((resolve, reject) => {

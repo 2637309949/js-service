@@ -177,29 +177,83 @@ async function createService (...opts) {
                 const logger = this.withLogger(ctx)
                 logger.trace(...args)
             },
-            check(ctx, ...props) {
-                const rsp = []
-                const obj = ctx.params
-                props.forEach(prop => {
-                    if (!obj[prop]) {
-                        rsp.push(prop)
+            validate(ctx, ...rules) {
+                const params = ctx.params
+                const validationRules = {
+                    exists: (value) => value !== undefined && value !== null,
+                    gte: (value, threshold) => parseFloat(value) >= parseFloat(threshold),
+                    lte: (value, threshold) => parseFloat(value) <= parseFloat(threshold),
+                    len: (value, length) => value.length === parseInt(length, 10),
+                    minLen: (value, minLength) => value.length >= parseInt(minLength, 10),
+                    maxLen: (value, maxLength) => value.length <= parseInt(maxLength, 10),
+                    isEmail: (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+                    isNum: (value) => !isNaN(parseFloat(value)) && isFinite(value),
+                    isStr: (value) => typeof value === 'string',
+                }
+                function parseValidationRule(rule) {
+                    const ruleParts = rule.split('(')
+                    const ruleName = ruleParts[0].trim()
+                    const ruleArgs = ruleParts[1] ? ruleParts[1].replace(/\)$/, '').split(',').map(arg => arg.trim()) : []
+                    if (ruleArgs.length === 0) {
+                        return { ruleName: 'exists', ruleArgs: [ruleName] }
                     }
-                })
-                if (rsp.length) {
-                    throw new ValidationError(`参数[${rsp.join(',')}]不能为空!`)
+                    return { ruleName, ruleArgs }
+                }
+                for (const rule of rules) {
+                    const { ruleName, ruleArgs } = parseValidationRule(rule)
+                    const param = ruleArgs[0]
+                    const value = params[param]
+                    const args = ruleArgs.slice(1)
+                    const validationFunction = validationRules[ruleName]
+                    if (!validationFunction) {
+                        throw new Error(`未知的验证规则: ${ruleName}`)
+                    }
+                    if (!validationFunction(value, ...args)) {
+                        throw new ValidationError(`参数[${param}]验证失败! 规则[${ruleName}]`)
+                    }
                 }
             },
-            checkOr(ctx, ...props) {
+            validateOr(ctx, ...props) {
                 let or = false
-                const obj = ctx.params
-                for (let i = 0; i < props.length; i++) {
-                    const prop = props[i]
-                    if (obj[prop]) {
+                let orRule = ""
+                const params = ctx.params
+                const validationRules = {
+                    exists: (value) => value !== undefined && value !== null,
+                    gte: (value, threshold) => parseFloat(value) >= parseFloat(threshold),
+                    lte: (value, threshold) => parseFloat(value) <= parseFloat(threshold),
+                    len: (value, length) => value.length === parseInt(length, 10),
+                    minLen: (value, minLength) => value.length >= parseInt(minLength, 10),
+                    maxLen: (value, maxLength) => value.length <= parseInt(maxLength, 10),
+                    isEmail: (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+                    isNum: (value) => !isNaN(parseFloat(value)) && isFinite(value),
+                    isStr: (value) => typeof value === 'string',
+                }
+                function parseValidationRule(rule) {
+                    const ruleParts = rule.split('(')
+                    const ruleName = ruleParts[0].trim()
+                    const ruleArgs = ruleParts[1] ? ruleParts[1].replace(/\)$/, '').split(',').map(arg => arg.trim()) : []
+                    if (ruleArgs.length === 0) {
+                        return { ruleName: 'exists', ruleArgs: [ruleName] }
+                    }
+                    return { ruleName, ruleArgs }
+                }
+                for (const rule of rules) {
+                    const { ruleName, ruleArgs } = parseValidationRule(rule)
+                    const param = ruleArgs[0]
+                    const value = params[param]
+                    const args = ruleArgs.slice(1)
+                    const validationFunction = validationRules[ruleName]
+                    if (!validationFunction) {
+                        throw new Error(`未知的验证规则: ${ruleName}`)
+                    }
+                    if (validationFunction(value, ...args)) {
                         or = true
-                        break
+                    } else {
+                        orRule += `参数[${param}]验证失败! 规则[${ruleName}]\n`
                     }
                 }
                 if (!or) {
+                    throw new ValidationError(orRule)
                     throw new ValidationError(`参数[${props.join(',')}]不能同时为空!`)
                 }
             }

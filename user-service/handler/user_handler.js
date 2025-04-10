@@ -10,8 +10,8 @@ const {
 withAction({
     queryUserDetail: {
         rest: 'GET /queryUserDetail',
-        async handler(ctx) {
-            this.check(ctx, 'id')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id')
             const sequelize = this.initDb(ctx)
             const { id } = ctx.params
             const rsp = {}
@@ -29,8 +29,8 @@ withAction({
     queryUser: {
         auth: 'disabled',
         rest: 'GET /queryUser',
-        async handler(ctx) {
-            this.check(ctx, 'username')
+        handler: async function(ctx) {
+            this.validate(ctx, 'username')
             const sequelize = this.initDb(ctx)
             const {
                 username,
@@ -50,8 +50,8 @@ withAction({
     },
     updateUser: {
         rest: 'POST /updateUser',
-        async handler(ctx) {
-            this.check(ctx, 'id', 'username', 'email')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id', 'username', 'email')
             const sequelize = this.initDb(ctx)
             const { id, username, email } = ctx.params
             const rsp = {}
@@ -75,8 +75,8 @@ withAction({
     },
     deleteUser: {
         rest: 'POST /deleteUser',
-        async handler(ctx) {
-            this.check(ctx, 'id')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id')
             const sequelize = this.initDb(ctx)
             const id = ctx.params.id
             const rsp = {}
@@ -88,8 +88,8 @@ withAction({
     },
     insertUser: {
         rest: 'POST /insertUser',
-        async handler(ctx) {
-            this.check(ctx, 'username', 'email')
+        handler: async function(ctx) {
+            this.validate(ctx, 'username', 'email')
             const sequelize = this.initDb(ctx)
             const {
                 username,
@@ -115,8 +115,8 @@ withAction({
     },
     saveUser: {
         rest: 'POST /saveUser',
-        async handler(ctx) {
-            this.check(ctx, 'id')
+        handler: async function(ctx) {
+            this.validate(ctx, 'id')
             const sequelize = this.initDb(ctx)
             const { id, name, email } = ctx.params
             const updateFields = {}

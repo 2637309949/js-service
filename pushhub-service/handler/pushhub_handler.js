@@ -9,7 +9,7 @@ const {
 
 withAction({
     async push(ctx) {
-        this.check(ctx, 'toUser', 'eventId', 'univeralStr', 'source')
+        this.validate(ctx, 'toUser', 'eventId', 'univeralStr', 'source')
         const { toUser, eventId, univeralStr, source } = ctx.params
         const rsp = {}
         return rsp
