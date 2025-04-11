@@ -40,6 +40,7 @@ createWeb(
             authorization: false,
             aliases: {
                 'GET /login': 'apigate.login',
+                'GET /register': 'apigate.register',
             }
         }],
         assets: {
