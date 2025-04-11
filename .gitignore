@@ -36,7 +36,7 @@ logs/
 
 # assets file dir
 comm/assert/data/
-public/
+public/files
 
 *.exe
 *.test
