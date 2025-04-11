@@ -28,10 +28,18 @@ createWeb(
         },
         {
             path: '/upload',
+            authorization: false,
             cors: true,
             aliases: {
                 'POST /multipart': 'multipart:file.multipart',
                 'POST /stream': 'stream:file.stream',
+            }
+        },
+        {
+            path: '',
+            authorization: false,
+            aliases: {
+                'GET /login': 'apigate.login',
             }
         }],
         assets: {
