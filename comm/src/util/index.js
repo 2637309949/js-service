@@ -1,5 +1,6 @@
 const glob = require('./glob')
 const uid = require('./uid')
+const file = require('./file')
 const ede3 = require('./ede3')
 
 function clearRequireCache(filename) {
@@ -60,6 +61,7 @@ module.exports.isDate = isDate
 module.exports.isPromise = isPromise
 module.exports.uniq = uniq
 module.exports.ede3 = ede3
+module.exports.file = file
 
 Object.assign(module.exports, uid)
 Object.assign(module.exports, glob)

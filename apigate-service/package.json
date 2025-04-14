@@ -6,7 +6,8 @@
     "build": "node build"
   },
   "dependencies": {
-    "comm": "file:../comm"
+    "comm": "file:../comm",
+    "ramda": "^0.30.1"
   },
   "_moduleRequires": [
     "handler/**/*.js",
