@@ -11,6 +11,7 @@ const {
 const responseTypeHtml = 'text/html; charset=UTF-8'
 
 withAction({
+    home: createReadStreamR('./public/index.html', responseTypeHtml),
     login: createReadStreamR('./public/login.html', responseTypeHtml),
     register: createReadStreamR('./public/register.html', responseTypeHtml),
 })
