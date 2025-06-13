@@ -1,4 +1,4 @@
-const sequelize = require('comm').sequelize
+const sequelize = require('comm/sequelize')
 const DataTypes = sequelize.DataTypes
 
 const {

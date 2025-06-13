@@ -1,6 +1,5 @@
 const _ = require('lodash')
-const comm = require('comm')
-const micro = comm.micro
+const micro = require('comm/micro')
 const {
     withMethod,
     errors: {

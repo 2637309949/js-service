@@ -1,6 +1,5 @@
-const comm = require('comm')
 const bcrypt = require('bcryptjs')
-const micro = comm.micro
+const micro = require('comm/micro')
 const {
     withMethod
 } = micro

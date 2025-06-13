@@ -1,3 +1,8 @@
+require('dotenv').config({ 
+    path: ['../.env', '.env'] 
+})
+const alias = require('../alias')
+const unused = 'typeof __unused_webpack_exports'
 const { 
     ServiceBroker, 
     Errors: {
@@ -323,3 +328,9 @@ Object.assign(module.exports, options)
 Object.assign(module.exports, actions)
 Object.assign(module.exports, methods)
 Object.assign(module.exports, crons)
+
+// for nopacked
+// 必须在comm加载后再去init，避免出现循环依赖异常
+if (eval(unused) === 'undefined') {
+    alias.init(process.cwd())
+}

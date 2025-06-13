@@ -1,6 +1,5 @@
-const comm = require('comm')
+const micro = require('comm/micro')
 const pkg = require('./package.json')
-const micro = comm.micro
 const {
     createCron,
     withName,

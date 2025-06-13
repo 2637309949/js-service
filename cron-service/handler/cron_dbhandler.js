@@ -1,5 +1,4 @@
-const comm = require('comm')
-const micro = comm.micro
+const micro = require('comm/micro')
 const {
     withMethod
 } = micro

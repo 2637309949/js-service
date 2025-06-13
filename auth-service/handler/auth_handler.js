@@ -1,7 +1,6 @@
-const comm = require('comm')
+const micro = require('comm/micro')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
-const micro = comm.micro
 const {
     withAction,
     errors: {

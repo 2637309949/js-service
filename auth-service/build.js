@@ -1,12 +1,12 @@
 const fs = require('fs')
 const path = require('path')
-const comm = require('comm')
+const alias = require('comm/alias')
 const pkg = require('./package.json')
 const name = pkg.name
 const outputFile = `./${name}.ncc`
 const entryFile = './index.js'
-const alias = comm.alias.moduleRequires
-const nccLoc = path.join(require.resolve('comm'), "../../cmd/ncc")
+const moduleRequires = alias.moduleRequires
+const nccLoc = path.join(require.resolve('comm'), "../cmd/ncc")
 const ncc = require(nccLoc)
 
 ncc(entryFile, {
@@ -23,7 +23,7 @@ ncc(entryFile, {
     v8cache: false,
     quiet: false,
     debugLog: false,
-    alias
+    alias: moduleRequires,
 }).then(({ code, map, assets }) => {
       fs.writeFileSync(outputFile, code, 'utf8')
 })

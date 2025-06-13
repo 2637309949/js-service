@@ -1,6 +1,5 @@
-const comm = require('comm')
-const micro = comm.micro
-const util = comm.util
+const micro = require('comm/micro')
+const util = require('comm/util')
 const file = util.file
 const  {
     createReadStreamR

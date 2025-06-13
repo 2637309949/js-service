@@ -1,7 +1,6 @@
-const comm = require('comm')
+const micro = require('comm/micro')
 const fs = require("fs-extra")
 const path = require("path")
-const micro = comm.micro
 const {
     withAction
 } = micro
