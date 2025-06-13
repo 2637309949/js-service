@@ -22,3 +22,15 @@ $ npm link
 $ npm start
 $ npm build
 ```
+
+运行consul（仅用于测试!）
+```zsh
+./consul.exe agent `
+    -server `
+    -bootstrap-expect=1 `
+    -http-port=8400 `
+    -data-dir=comm/assert/data `
+    -bind="172.30.10.72" `
+    -advertise="172.30.10.72" `
+    -ui=true
+```
